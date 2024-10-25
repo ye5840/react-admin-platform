@@ -1,7 +1,16 @@
 import type { FC } from 'react'
+import { getJson } from './confg'
+import TableForm from '@/custom-components/businessForm/tableForm'
+import TableList from '@/custom-components/businessTable/tableList'
 
-const TransferOutbound: FC = (props: objAny) => {
-  return <div>调拨出库</div>
+const { formJson } = getJson()
+const TransferOutbound: FC = () => {
+  return (
+    <>
+      <TableForm formJson={formJson}></TableForm>
+      <TableList></TableList>
+    </>
+  )
 }
 
 export default TransferOutbound
