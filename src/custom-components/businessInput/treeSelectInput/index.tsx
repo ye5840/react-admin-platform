@@ -13,6 +13,7 @@ type TreeSelectEvent = (selectedKeys: Key[], info: { node: any; selected: boolea
 
 const TreeSelectInput = (props: TreeSelectInputProps) => {
   const { inputConfig, treeConfig } = props
+  const treeRef = useRef<HTMLDivElement>(null)
   const [treeSelectInputInfo, setTreeSelectInputInfo] = useState({
     selectContentShow: false,
     inputValue: ''
@@ -48,8 +49,6 @@ const TreeSelectInput = (props: TreeSelectInputProps) => {
       inputValue
     })
   }
-
-  const treeRef = useRef<HTMLDivElement>(null)
 
   // 添加 useEffect 监听点击事件
   useEffect(() => {

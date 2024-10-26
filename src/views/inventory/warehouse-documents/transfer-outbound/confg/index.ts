@@ -65,7 +65,24 @@ export const getJson = () => {
       }
     },
     documentDate: {
-      label: '单据日期'
+      label: '单据日期',
+      type: 'dateRangeInput',
+      component: {
+        options: [
+          {
+            name: '今天',
+            code: '1'
+          },
+          {
+            name: '昨天',
+            code: '2'
+          }
+        ],
+        optionsFiled: {
+          label: 'name',
+          value: 'code'
+        }
+      }
     },
     auditStatus: {
       label: '审核状态',
@@ -80,7 +97,8 @@ export const getJson = () => {
             label: '已审核',
             value: '2'
           }
-        ]
+        ],
+        allowClear: true
       }
     },
     transferStatus: {
@@ -99,7 +117,8 @@ export const getJson = () => {
             label: '异价调拨',
             value: '2'
           }
-        ]
+        ],
+        allowClear: true
       }
     },
     outgoingDepartment: {
