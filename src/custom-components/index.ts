@@ -5,6 +5,7 @@ import CustomTreeSelect from './custom-treeSelect/index'
 import TreeSelectInput from '@/custom-components/businessInput/treeSelectInput'
 import DateRangeInput from '@/custom-components/businessInput/dateRangeInput'
 import CheckboxSelect from '@/custom-components/businessSelect/checkboxSelect'
+import TableSelect from '@/custom-components/businessSelect/tableSelect'
 
 export const componentMap = new Map<string, React.FC<any>>([
   ['checkbox', CustomCheckbox],
@@ -15,5 +16,6 @@ export const componentMap = new Map<string, React.FC<any>>([
   /* 以下是自定义组件 */
   ['treeSelectInput', TreeSelectInput],
   ['dateRangeInput', DateRangeInput],
-  ['checkboxSelect', CheckboxSelect]
+  ['checkboxSelect', CheckboxSelect],
+  ['tableSelect', TableSelect]
 ])
