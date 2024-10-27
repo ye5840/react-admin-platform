@@ -102,7 +102,30 @@ export const getJson = () => {
       }
     },
     transferStatus: {
-      label: '调拨状态'
+      label: '调拨状态',
+      type: 'checkboxSelect',
+      component: {
+        options: [
+          {
+            label: '未出库',
+            value: '1'
+          },
+          {
+            label: '未入库',
+            value: '2'
+          },
+          {
+            label: '部分入库',
+            value: '3'
+          },
+          {
+            label: '全部入库',
+            value: '4'
+          }
+        ],
+        mode: 'multiple',
+        allowClear: true
+      }
     },
     businessType: {
       label: '业务类型',
