@@ -1,14 +1,19 @@
-import type { FC } from 'react'
+import { useEffect, useRef, type FC } from 'react'
 import { getJson } from './confg'
 import TableForm from '@/custom-components/businessForm/tableForm'
 import TableList from '@/custom-components/businessTable/tableList'
+import './index.less'
 
-const { formJson } = getJson()
+const { formJson, cardConfig, tableConfig } = getJson()
 const TransferOutbound: FC = () => {
+  const tableFormRef = useRef<any>()
+  useEffect(() => {
+    console.log(tableFormRef.current)
+  }, [])
   return (
     <>
-      <TableForm formJson={formJson}></TableForm>
-      <TableList></TableList>
+      <TableForm formRef={tableFormRef} formJson={formJson} name='transferOutbound'></TableForm>
+      <TableList tableFormRef={tableFormRef} tableConfig={tableConfig}></TableList>
     </>
   )
 }

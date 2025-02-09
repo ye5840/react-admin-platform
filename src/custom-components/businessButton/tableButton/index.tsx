@@ -1,10 +1,13 @@
-import type { FC } from 'react'
-import { useEffect, useState, useId, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { ContentWrap } from '@/components/ContentWrap'
 import BasicButton from '@/custom-components/basicButton'
-import styles from './index.module.less'
+import './index.less'
 
-const TableButton: FC = (props: objAny) => {
+interface tableButtonProp {
+  formRef: objAny
+}
+
+const TableButton = (props: tableButtonProp) => {
   const [tableButtonConfig, setTableButtonConfig] = useState({
     expand: false
   })
@@ -73,19 +76,23 @@ const TableButton: FC = (props: objAny) => {
     })
   }
 
+  useEffect(() => {
+    console.log(props.formRef, 'props.formRef---------------tableButtonProp')
+  }, [])
+
   return (
-    <ContentWrap>
-      <div className={styles['contentWrap']}>
+    <ContentWrap name={''}>
+      <div className={'contentWrap'}>
         <BasicButton btnConfig={operateBtnConfig} wrapConfig={{ className: 'operateWarpper' }}></BasicButton>
         <BasicButton btnConfig={searchBtnConfig} wrapConfig={{ className: 'searchWarpper' }}>
           <span>
             {!tableButtonConfig.expand && (
-              <span className={styles['expand']} onClick={handleExpandFold}>
+              <span className={'expand'} onClick={handleExpandFold}>
                 展开
               </span>
             )}
             {tableButtonConfig.expand && (
-              <span className={styles['fold']} onClick={handleExpandFold}>
+              <span className={'fold'} onClick={handleExpandFold}>
                 收起
               </span>
             )}

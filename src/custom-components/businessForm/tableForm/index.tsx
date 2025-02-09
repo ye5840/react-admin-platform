@@ -2,14 +2,21 @@ import { ContentWrap } from '@/components/ContentWrap'
 import TableButton from '@/custom-components/businessButton/tableButton'
 import BasicForm from '@/custom-components/basicForm'
 
-const TableForm = (props: objAny) => {
-  const { formJson } = props
+interface TableFormProp {
+  formJson: objAny
+  name: string // 全局唯一且固定
+  cardConfig?: objAny
+  formRef: objAny
+}
+
+const TableForm = (props: TableFormProp) => {
+  const { formJson, cardConfig, name, formRef } = props
 
   return (
     <>
-      <TableButton></TableButton>
-      <ContentWrap>
-        <BasicForm formJson={formJson}></BasicForm>
+      <TableButton formRef={formRef}></TableButton>
+      <ContentWrap {...cardConfig} name={name + 'Card'}>
+        <BasicForm formRef={formRef} formJson={formJson} name={name + 'Form'}></BasicForm>
       </ContentWrap>
     </>
   )

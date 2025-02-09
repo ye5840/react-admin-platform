@@ -1,7 +1,21 @@
-import type { FC } from 'react'
+import { useEffect, useRef, type FC } from 'react'
+import { getJson } from './config'
+import TableForm from '@/custom-components/businessForm/tableForm'
+import TableList from '@/custom-components/businessTable/tableList'
+import './index.less'
 
-const TransferInventory: FC = (props: objAny) => {
-  return <div>调拨入库</div>
+const { formJson, cardConfig, tableConfig } = getJson()
+const TransferInventory: FC = () => {
+  const tableFormRef = useRef<any>()
+  useEffect(() => {
+    console.log(tableFormRef.current)
+  }, [])
+  return (
+    <>
+      <TableForm formRef={tableFormRef} formJson={formJson} name='transferInventory'></TableForm>
+      <TableList tableFormRef={tableFormRef} tableConfig={tableConfig}></TableList>
+    </>
+  )
 }
 
 export default TransferInventory

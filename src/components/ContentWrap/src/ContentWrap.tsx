@@ -4,13 +4,16 @@ import { Card } from 'antd'
 interface ContentWrapProp {
   config?: objAny
   children?: JSX.Element
+  name: string
 }
 const ContentWrap = (props: ContentWrapProp) => {
-  const { config, children } = props
+  const { config, children, name } = props
 
   return (
     <div>
-      <Card {...config}>{children}</Card>
+      <Card {...config} className={name}>
+        {children}
+      </Card>
     </div>
   )
 }
