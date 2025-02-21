@@ -1,4 +1,3 @@
-import type { FC } from 'react'
 import { Card } from 'antd'
 
 interface ContentWrapProp {
@@ -10,11 +9,9 @@ const ContentWrap = (props: ContentWrapProp) => {
   const { config, children, name } = props
 
   return (
-    <div>
-      <Card {...config} className={name}>
-        {children}
-      </Card>
-    </div>
+    <Card {...config} className={name}>
+      {children}
+    </Card>
   )
 }
 

@@ -20,7 +20,6 @@ const TableSelect: FC = (props: objAny) => {
   }
 
   const onClickRow = (record, rowKey) => {
-    console.log(record, rowKey)
     if (optionsFiled.label && optionsFiled.value) {
       setTableSelectInfo({
         selectValue: record[optionsFiled.value]

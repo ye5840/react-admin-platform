@@ -1,6 +1,8 @@
 export const getJson = () => {
   const formJson = {
-    formConfig: {},
+    formConfig: {
+      size: 'small'
+    },
     formItemConfig: {
       queryScope: {
         label: '查询范围',

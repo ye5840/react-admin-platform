@@ -59,7 +59,10 @@ const TableButton = (props: tableButtonProp) => {
 
   const searchBtnConfig = {
     search: {
-      name: '搜索'
+      name: '搜索',
+      onClick: () => {
+        console.log(111)
+      }
     },
     reset: {
       name: '重置'
@@ -83,8 +86,8 @@ const TableButton = (props: tableButtonProp) => {
   return (
     <ContentWrap name={''}>
       <div className={'contentWrap'}>
-        <BasicButton btnConfig={operateBtnConfig} wrapConfig={{ className: 'operateWarpper' }}></BasicButton>
-        <BasicButton btnConfig={searchBtnConfig} wrapConfig={{ className: 'searchWarpper' }}>
+        <BasicButton btnConfig={operateBtnConfig}></BasicButton>
+        <BasicButton btnConfig={searchBtnConfig}>
           <span>
             {!tableButtonConfig.expand && (
               <span className={'expand'} onClick={handleExpandFold}>

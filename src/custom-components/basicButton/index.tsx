@@ -14,7 +14,7 @@ const BasicButton = (props: BasicButtonProp) => {
       {btnConfig &&
         Object.keys(btnConfig).map(key => {
           return (
-            <Button {...btnConfig[key].config} style={{ marginRight: '10px' }} key={key}>
+            <Button {...btnConfig[key]} style={{ marginRight: '10px' }} key={key}>
               {btnConfig[key].name}
             </Button>
           )

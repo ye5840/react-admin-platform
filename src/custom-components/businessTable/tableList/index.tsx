@@ -1,6 +1,7 @@
 import { Table } from 'antd'
 import { useState, useEffect } from 'react'
 import { SettingOutlined } from '@ant-design/icons'
+import { ContentWrap } from '@/components/ContentWrap'
 import './index.less'
 
 interface tableListProp {
@@ -49,20 +50,22 @@ const TableList = (props: tableListProp) => {
   }, [])
 
   return (
-    <Table
-      rowKey='id'
-      loading={tableLoading}
-      pagination={{
-        current: tableQuery.current,
-        pageSize: tableQuery.pageSize,
-        total: tableTotal,
-        showTotal: () => `Total ${tableTotal} items`,
-        showSizeChanger: true,
-        showQuickJumper: true,
-        onChange: handlePageChange
-      }}
-      {...computedTableConfig}
-    ></Table>
+    <ContentWrap name={''}>
+      <Table
+        rowKey='id'
+        loading={tableLoading}
+        pagination={{
+          current: tableQuery.current,
+          pageSize: tableQuery.pageSize,
+          total: tableTotal,
+          showTotal: () => `Total ${tableTotal} items`,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          onChange: handlePageChange
+        }}
+        {...computedTableConfig}
+      ></Table>
+    </ContentWrap>
   )
 }
 

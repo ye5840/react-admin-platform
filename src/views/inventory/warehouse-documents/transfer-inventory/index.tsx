@@ -2,7 +2,6 @@ import { useEffect, useRef, type FC } from 'react'
 import { getJson } from './config'
 import TableForm from '@/custom-components/businessForm/tableForm'
 import TableList from '@/custom-components/businessTable/tableList'
-import './index.less'
 
 const { formJson, cardConfig, tableConfig } = getJson()
 const TransferInventory: FC = () => {
