@@ -1,18 +1,17 @@
-import { useEffect, useRef, type FC } from 'react'
+import { useState, type FC } from 'react'
 import { getJson } from './config'
 import TableForm from '@/custom-components/businessForm/tableForm'
 import TableList from '@/custom-components/businessTable/tableList'
 
-const { formJson, cardConfig, tableConfig } = getJson()
 const TransferInventory: FC = () => {
-  const tableFormRef = useRef<any>()
-  useEffect(() => {
-    console.log(tableFormRef.current)
-  }, [])
+  const [formData, setFormData] = useState({
+    outgoingDepartment: 1
+  })
+  const { formJson, tableConfig, api } = getJson({ formData, setFormData })
   return (
     <>
-      <TableForm formRef={tableFormRef} formJson={formJson} name='transferInventory'></TableForm>
-      <TableList tableFormRef={tableFormRef} tableConfig={tableConfig}></TableList>
+      <TableForm formJson={formJson} formData={formData} setFormData={setFormData}></TableForm>
+      <TableList tableConfig={tableConfig} api={api} formData={formData}></TableList>
     </>
   )
 }

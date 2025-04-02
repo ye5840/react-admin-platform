@@ -3,9 +3,7 @@ import { ContentWrap } from '@/components/ContentWrap'
 import BasicButton from '@/custom-components/basicButton'
 import './index.less'
 
-interface tableButtonProp {
-  formRef: objAny
-}
+interface tableButtonProp {}
 
 const TableButton = (props: tableButtonProp) => {
   const [tableButtonConfig, setTableButtonConfig] = useState({
@@ -58,12 +56,6 @@ const TableButton = (props: tableButtonProp) => {
   }
 
   const searchBtnConfig = {
-    search: {
-      name: '搜索',
-      onClick: () => {
-        console.log(111)
-      }
-    },
     reset: {
       name: '重置'
     },
@@ -79,12 +71,10 @@ const TableButton = (props: tableButtonProp) => {
     })
   }
 
-  useEffect(() => {
-    console.log(props.formRef, 'props.formRef---------------tableButtonProp')
-  }, [])
+  useEffect(() => {}, [])
 
   return (
-    <ContentWrap name={''}>
+    <ContentWrap>
       <div className={'contentWrap'}>
         <BasicButton btnConfig={operateBtnConfig}></BasicButton>
         <BasicButton btnConfig={searchBtnConfig}>

@@ -5,21 +5,21 @@ import './index.less'
 
 interface TableFormProp {
   formJson: objAny
-  name: string // 全局唯一且固定
   cardConfig?: objAny
-  formRef: objAny
+  formData: objAny
+  setFormData: Function
 }
 
 const TableForm = (props: TableFormProp) => {
-  const { formJson, cardConfig, name, formRef } = props
+  const { formJson, cardConfig, formData, setFormData } = props
 
   return (
-    <>
-      <TableButton formRef={formRef}></TableButton>
-      <ContentWrap {...cardConfig} name={name + 'Card'}>
-        <BasicForm formRef={formRef} formJson={formJson} name={name + 'Form'}></BasicForm>
+    <div className='tableForm'>
+      <TableButton></TableButton>
+      <ContentWrap {...cardConfig}>
+        <BasicForm formJson={formJson} formData={formData} setFormData={setFormData}></BasicForm>
       </ContentWrap>
-    </>
+    </div>
   )
 }
 

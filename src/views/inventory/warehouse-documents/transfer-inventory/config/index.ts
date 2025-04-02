@@ -1,4 +1,5 @@
-export const getJson = () => {
+import { getTransferInventoryList } from '@/api/inventory/transferInventory'
+export const getJson = ({ formData, setFormData }) => {
   const formJson = {
     formConfig: {
       size: 'small'
@@ -66,7 +67,9 @@ export const getJson = () => {
               }
             ]
           },
-          size: 'samll'
+          size: 'samll',
+          value: formData.queryScope,
+          setValue: setFormData
         },
         name: 'queryScope',
         colon: false,
@@ -89,11 +92,14 @@ export const getJson = () => {
               code: '2'
             }
           ],
-          optionsFiled: {
+          optionsfiled: {
             label: 'name',
             value: 'code'
-          }
-        }
+          },
+          value: formData.documentDate,
+          setValue: setFormData
+        },
+        name: 'documentDate'
       },
       auditStatus: {
         label: '审核状态',
@@ -111,8 +117,11 @@ export const getJson = () => {
               value: '2'
             }
           ],
-          allowClear: true
-        }
+          allowClear: true,
+          value: formData.auditStatus,
+          setValue: setFormData
+        },
+        name: 'auditStatus'
       },
       businessType: {
         label: '业务类型',
@@ -130,8 +139,11 @@ export const getJson = () => {
               value: '2'
             }
           ],
-          allowClear: true
-        }
+          allowClear: true,
+          value: formData.businessType,
+          setValue: setFormData
+        },
+        name: 'businessType'
       },
       outgoingDepartment: {
         label: '调出部门',
@@ -151,7 +163,7 @@ export const getJson = () => {
               dataIndex: 'deptName'
             }
           ],
-          optionsFiled: {
+          optionsfiled: {
             label: 'deptName',
             value: 'deptCode'
           },
@@ -173,8 +185,11 @@ export const getJson = () => {
               deptName: '利润中心'
             }
           ],
-          dictUrl: ''
-        }
+          dicturl: '',
+          value: formData.outgoingDepartment,
+          setValue: val => setFormData({ outgoingDepartment: val })
+        },
+        name: 'outgoingDepartment'
       },
       incomingDepartment: {
         label: '调入部门',
@@ -194,7 +209,7 @@ export const getJson = () => {
               dataIndex: 'deptName'
             }
           ],
-          optionsFiled: {
+          optionsfiled: {
             label: 'deptName',
             value: 'deptCode'
           },
@@ -216,8 +231,11 @@ export const getJson = () => {
               deptName: '利润中心'
             }
           ],
-          dictUrl: ''
-        }
+          dicturl: '',
+          value: formData.incomingDepartment,
+          setValue: setFormData
+        },
+        name: 'incomingDepartment'
       },
       documentSource: {
         label: '单据来源',
@@ -268,8 +286,11 @@ export const getJson = () => {
             }
           ],
           mode: 'multiple',
-          allowClear: true
-        }
+          allowClear: true,
+          value: formData.documentSource,
+          setValue: setFormData
+        },
+        name: 'documentSource'
       },
       documentLabel: {
         label: '单据标签',
@@ -284,7 +305,7 @@ export const getJson = () => {
               dataIndex: 'labelName'
             }
           ],
-          optionsFiled: {
+          optionsfiled: {
             label: 'labelName',
             value: 'labelCode'
           },
@@ -306,8 +327,11 @@ export const getJson = () => {
               labelName: '产品标签'
             }
           ],
-          dictUrl: ''
-        }
+          dicturl: '',
+          value: formData.documentLabel,
+          setValue: setFormData
+        },
+        name: 'documentLabel'
       }
     }
   }
@@ -415,12 +439,18 @@ export const getJson = () => {
     ],
     scroll: {
       x: 15000
-    }
+    },
+    dataSource: []
+  }
+
+  const api = {
+    list: getTransferInventoryList
   }
 
   return {
     formJson,
     cardConfig,
-    tableConfig
+    tableConfig,
+    api
   }
 }

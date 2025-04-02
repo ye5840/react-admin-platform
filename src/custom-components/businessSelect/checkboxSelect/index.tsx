@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react'
 import { Checkbox, Select, Divider } from 'antd'
-import type { CheckboxProps } from 'antd'
 import styles from './index.module.less'
 
 const CheckboxGroup = Checkbox.Group

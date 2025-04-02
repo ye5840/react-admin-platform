@@ -88,7 +88,7 @@ export const getJson = () => {
               code: '2'
             }
           ],
-          optionsFiled: {
+          optionsfiled: {
             label: 'name',
             value: 'code'
           }
@@ -178,7 +178,7 @@ export const getJson = () => {
               dataIndex: 'deptName'
             }
           ],
-          optionsFiled: {
+          optionsfiled: {
             label: 'deptName',
             value: 'deptCode'
           },
@@ -200,7 +200,7 @@ export const getJson = () => {
               deptName: '利润中心'
             }
           ],
-          dictUrl: ''
+          dicturl: ''
         }
       },
       incomingDepartment: {
@@ -221,7 +221,7 @@ export const getJson = () => {
               dataIndex: 'deptName'
             }
           ],
-          optionsFiled: {
+          optionsfiled: {
             label: 'deptName',
             value: 'deptCode'
           },
@@ -243,7 +243,7 @@ export const getJson = () => {
               deptName: '利润中心'
             }
           ],
-          dictUrl: ''
+          dicturl: ''
         }
       },
       discrepancyHandlingStatus: {
@@ -331,7 +331,7 @@ export const getJson = () => {
               dataIndex: 'labelName'
             }
           ],
-          optionsFiled: {
+          optionsfiled: {
             label: 'labelName',
             value: 'labelCode'
           },
@@ -353,7 +353,7 @@ export const getJson = () => {
               labelName: '产品标签'
             }
           ],
-          dictUrl: ''
+          dicturl: ''
         }
       }
     }

@@ -7,7 +7,7 @@ import type { InputRef } from 'antd'
 interface DateRangeInputProps {
   inputConfig?: objAny
   options?: any[]
-  optionsFiled?: {
+  optionsfiled?: {
     label: string
     value: string
   }
@@ -24,7 +24,7 @@ const defaultOptions = [
 const { RangePicker } = DatePicker
 
 const DateRangeInput = (props: DateRangeInputProps) => {
-  const { inputConfig, options, optionsFiled, rangePickerConfig } = props
+  const { inputConfig, options, optionsfiled, rangePickerConfig } = props
   const dateRangeInputRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<InputRef>(null)
 
@@ -46,15 +46,15 @@ const DateRangeInput = (props: DateRangeInputProps) => {
 
   let contentOptions = []
   const resultOptions = options && options.length > 0 ? [...options, ...defaultOptions] : [...defaultOptions]
-  if (optionsFiled?.label && optionsFiled?.value) {
+  if (optionsfiled?.label && optionsfiled?.value) {
     contentOptions = [...resultOptions].map(item => {
       if (item.label === '自定义') {
         return { ...item }
       }
       return {
         ...item,
-        label: item[optionsFiled?.label],
-        value: item[optionsFiled?.value]
+        label: item[optionsfiled?.label],
+        value: item[optionsfiled?.value]
       }
     })
   } else {

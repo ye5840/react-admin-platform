@@ -3,27 +3,30 @@ import { useCallback, useState } from 'react'
 import { Select, Table } from 'antd'
 
 const TableSelect: FC = (props: objAny) => {
-  const { columns, optionsFiled, data } = props
+  const { columns, optionsfiled, data, value, setValue } = props
   const [dropDownOpen, setDropDownOpen] = useState(false)
   const [tableSelectInfo, setTableSelectInfo] = useState({
     selectValue: undefined
   })
   let selectOptions = data
-  if (optionsFiled.label && optionsFiled.value) {
+  if (optionsfiled?.label && optionsfiled?.value) {
     selectOptions = data.map(item => {
       return {
         ...item,
-        label: item[optionsFiled.label],
-        value: item[optionsFiled.value]
+        label: item[optionsfiled?.label],
+        value: item[optionsfiled?.value]
       }
     })
   }
 
   const onClickRow = (record, rowKey) => {
-    if (optionsFiled.label && optionsFiled.value) {
-      setTableSelectInfo({
-        selectValue: record[optionsFiled.value]
-      })
+    if (optionsfiled?.label && optionsfiled?.value) {
+      // setTableSelectInfo({
+      //   selectValue: record[optionsfiled?.value]
+      // })
+      console.log(record[optionsfiled?.value], value, setValue, 'value----')
+      // value = record[optionsfiled?.value]
+      setValue(record[optionsfiled?.value])
       setDropDownOpen(false)
     } else {
       setTableSelectInfo({
@@ -51,7 +54,7 @@ const TableSelect: FC = (props: objAny) => {
   return (
     <Select
       {...props}
-      value={tableSelectInfo.selectValue}
+      value={value ? value : tableSelectInfo.selectValue}
       dropdownRender={menu => customDropdownRender(menu)}
       onDropdownVisibleChange={setDropDownOpen}
       open={dropDownOpen}

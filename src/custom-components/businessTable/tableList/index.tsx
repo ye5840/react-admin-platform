@@ -1,72 +1,107 @@
+import React, { useState, useEffect } from 'react'
 import { Table } from 'antd'
-import { useState, useEffect } from 'react'
-import { SettingOutlined } from '@ant-design/icons'
 import { ContentWrap } from '@/components/ContentWrap'
+import { SettingOutlined } from '@ant-design/icons'
+import { useRequest } from 'ahooks'
 import './index.less'
 
 interface tableListProp {
-  tableFormRef: objAny
   tableConfig: objAny
+  api: objAny
+  formData: objAny
 }
 
-interface PageState {
+interface PaginationParams {
   currentPage: number
   pageSize: number
 }
 
-const TableList = (props: tableListProp) => {
-  const { tableFormRef, tableConfig } = props
-  const [tableLoading, setTableLoading] = useState(false)
-  const [tableTotal, setTableTotal] = useState<number>(0)
-  const [tableQuery, setTableQuery] = useState<PageState>({ currentPage: 1, pageSize: 10 })
-  const [computedTableConfig, setComputedTableConfig] = useState(props.tableConfig)
+interface QueryParams extends PaginationParams {
+  [key: string]: unknown // 动态表单值
+}
 
-  console.log(tableFormRef.current, 'tableFormRef.current')
+interface resultDataType extends PaginationParams {
+  list: any[]
+  total: number
+  totalPages: number
+}
+
+const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData }) => {
+  // 合并分页和查询条件的状态
+  const [queryParams, setQueryParams] = useState<PaginationParams>({
+    currentPage: 1,
+    pageSize: 10
+  })
+
+  const { loading, data, run } = useRequest<resultDataType, any>(params => api.list(params), {
+    manual: true, // 手动控制
+    defaultParams: [queryParams],
+    onSuccess: result => {
+      // 成功回调处理
+      setComponentTableProp(prev => ({
+        ...prev,
+        dataSource: result?.list,
+        pagination: {
+          ...prev.pagination,
+          total: result?.total || 0,
+          showTotal: () => `总条数为 ${result?.total || 0} `
+        }
+      }))
+    }
+  })
 
   const handlePageChange = (currentPage: number, pageSize: number) => {
-    setTableQuery({ ...tableQuery, currentPage: currentPage, pageSize })
+    const newParams = {
+      ...queryParams,
+      currentPage,
+      pageSize
+    }
+    // 更新分页配置
+    setComponentTableProp(prev => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: currentPage,
+        pageSize: pageSize,
+        total: data?.total || prev.pagination.total || 0,
+        showTotal: () => `总条数为 ${data?.total || prev.pagination.total || 0} `
+      }
+    }))
+    setQueryParams(newParams)
+    run(newParams)
   }
 
-  const fetchData = () => {}
+  const [componentTableProp, setComponentTableProp] = useState({
+    ...tableConfig,
+    columns: [
+      ...tableConfig.columns,
+      {
+        title: () => <SettingOutlined />,
+        key: 'action',
+        fixed: 'right',
+        width: 30
+      }
+    ],
+    pagination: {
+      current: queryParams.currentPage,
+      pageSize: queryParams.pageSize,
+      total: data?.total || 0,
+      showTotal: () => `总条数为 ${data?.total || 0} `,
+      showSizeChanger: true,
+      showQuickJumper: true,
+      onChange: handlePageChange
+    }
+  })
 
   useEffect(() => {
-    fetchData()
-  }, [tableQuery])
-
-  useEffect(() => {
-    if (!computedTableConfig.columns || computedTableConfig.columns.length === 0) return
-    setComputedTableConfig({
-      ...computedTableConfig,
-      columns: [
-        ...computedTableConfig.columns,
-        {
-          title: () => <SettingOutlined />,
-          key: 'action',
-          fixed: 'right',
-          width: 50
-        }
-      ]
-    })
-  }, [])
+    run({ ...queryParams, ...formData }) // 在 useEffect 中触发请求
+  }, [formData]) // 空依赖数组，只在组件挂载时请求一次
 
   return (
-    <ContentWrap name={''}>
-      <Table
-        rowKey='id'
-        loading={tableLoading}
-        pagination={{
-          current: tableQuery.current,
-          pageSize: tableQuery.pageSize,
-          total: tableTotal,
-          showTotal: () => `Total ${tableTotal} items`,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          onChange: handlePageChange
-        }}
-        {...computedTableConfig}
-      ></Table>
+    <ContentWrap>
+      <Table rowKey='id' loading={loading} {...componentTableProp}></Table>
     </ContentWrap>
   )
 }
 
-export default TableList
+export default React.memo(TableList)
