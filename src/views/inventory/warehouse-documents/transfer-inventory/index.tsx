@@ -4,9 +4,7 @@ import TableForm from '@/custom-components/businessForm/tableForm'
 import TableList from '@/custom-components/businessTable/tableList'
 
 const TransferInventory: FC = () => {
-  const [formData, setFormData] = useState({
-    outgoingDepartment: 1
-  })
+  const [formData, setFormData] = useState({})
   const { formJson, tableConfig, api } = getJson({ formData, setFormData })
   return (
     <>

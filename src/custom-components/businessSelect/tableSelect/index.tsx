@@ -1,42 +1,56 @@
 import type { FC } from 'react'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Select, Table } from 'antd'
+import type { AnyObject } from 'antd/es/_util/type'
 
 const TableSelect: FC = (props: objAny) => {
-  const { columns, optionsfiled, data, value, setValue } = props
-  const [dropDownOpen, setDropDownOpen] = useState(false)
+  const { columns, optionsfiled, data, value, setValue, ...arg } = props
   const [tableSelectInfo, setTableSelectInfo] = useState({
-    selectValue: undefined
+    selectValue: setValue ? value : undefined,
+    selectOptions: [],
+    dropDownOpen: false
   })
-  let selectOptions = data
-  if (optionsfiled?.label && optionsfiled?.value) {
-    selectOptions = data.map(item => {
-      return {
-        ...item,
-        label: item[optionsfiled?.label],
-        value: item[optionsfiled?.value]
-      }
-    })
-  }
 
-  const onClickRow = (record, rowKey) => {
-    if (optionsfiled?.label && optionsfiled?.value) {
-      // setTableSelectInfo({
-      //   selectValue: record[optionsfiled?.value]
-      // })
-      console.log(record[optionsfiled?.value], value, setValue, 'value----')
-      // value = record[optionsfiled?.value]
-      setValue(record[optionsfiled?.value])
-      setDropDownOpen(false)
-    } else {
-      setTableSelectInfo({
-        selectValue: record.value
-      })
-      setDropDownOpen(false)
+  const onClickRow = (record: AnyObject, rowKey: number | undefined) => {
+    setTableSelectInfo(perv => ({
+      ...perv,
+      selectValue: optionsfiled?.value ? record[optionsfiled?.value] : record.value,
+      dropDownOpen: false
+    }))
+    if (setValue) {
+      setValue(optionsfiled?.value ? record[optionsfiled?.value] : record.value)
     }
   }
 
-  const customDropdownRender = useCallback(menu => {
+  useEffect(() => {
+    const selectOptions = data.map((item: { [x: string]: any; label: any; value: any }) => {
+      return {
+        ...item,
+        label: optionsfiled?.label ? item[optionsfiled?.label] : item.label,
+        value: optionsfiled?.value ? item[optionsfiled?.value] : item.value
+      }
+    })
+    setTableSelectInfo(perv => ({
+      ...perv,
+      selectOptions
+    }))
+  }, [])
+
+  const handleOnClear = () => {
+    setTableSelectInfo(perv => ({
+      ...perv,
+      selectValue: undefined,
+      dropDownOpen: false
+    }))
+    if (setValue) {
+      setValue(undefined)
+    }
+    if (arg.onClear) {
+      arg.onClear()
+    }
+  }
+
+  const customDropdownRender = useCallback((menu: any) => {
     return (
       <>
         <Table
@@ -54,11 +68,12 @@ const TableSelect: FC = (props: objAny) => {
   return (
     <Select
       {...props}
-      value={value ? value : tableSelectInfo.selectValue}
+      value={tableSelectInfo.selectValue}
       dropdownRender={menu => customDropdownRender(menu)}
-      onDropdownVisibleChange={setDropDownOpen}
-      open={dropDownOpen}
-      options={selectOptions}
+      onDropdownVisibleChange={val => setTableSelectInfo({ ...tableSelectInfo, dropDownOpen: val })}
+      open={tableSelectInfo.dropDownOpen}
+      options={tableSelectInfo.selectOptions}
+      onClear={handleOnClear}
     ></Select>
   )
 }

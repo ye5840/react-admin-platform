@@ -67,9 +67,7 @@ export const getJson = ({ formData, setFormData }) => {
               }
             ]
           },
-          size: 'samll',
-          value: formData.queryScope,
-          setValue: setFormData
+          size: 'samll'
         },
         name: 'queryScope',
         colon: false,
@@ -95,9 +93,7 @@ export const getJson = ({ formData, setFormData }) => {
           optionsfiled: {
             label: 'name',
             value: 'code'
-          },
-          value: formData.documentDate,
-          setValue: setFormData
+          }
         },
         name: 'documentDate'
       },
@@ -117,9 +113,7 @@ export const getJson = ({ formData, setFormData }) => {
               value: '2'
             }
           ],
-          allowClear: true,
-          value: formData.auditStatus,
-          setValue: setFormData
+          allowClear: true
         },
         name: 'auditStatus'
       },
@@ -139,9 +133,7 @@ export const getJson = ({ formData, setFormData }) => {
               value: '2'
             }
           ],
-          allowClear: true,
-          value: formData.businessType,
-          setValue: setFormData
+          allowClear: true
         },
         name: 'businessType'
       },
@@ -187,7 +179,13 @@ export const getJson = ({ formData, setFormData }) => {
           ],
           dicturl: '',
           value: formData.outgoingDepartment,
-          setValue: val => setFormData({ outgoingDepartment: val })
+          setValue: (val: any) => setFormData({ ...formData, outgoingDepartment: val }),
+          allowClear: true,
+          a: 1,
+          b: 2,
+          onClear: () => {
+            console.log(1111)
+          }
         },
         name: 'outgoingDepartment'
       },
@@ -231,9 +229,7 @@ export const getJson = ({ formData, setFormData }) => {
               deptName: '利润中心'
             }
           ],
-          dicturl: '',
-          value: formData.incomingDepartment,
-          setValue: setFormData
+          dicturl: ''
         },
         name: 'incomingDepartment'
       },
@@ -286,9 +282,7 @@ export const getJson = ({ formData, setFormData }) => {
             }
           ],
           mode: 'multiple',
-          allowClear: true,
-          value: formData.documentSource,
-          setValue: setFormData
+          allowClear: true
         },
         name: 'documentSource'
       },
@@ -327,9 +321,7 @@ export const getJson = ({ formData, setFormData }) => {
               labelName: '产品标签'
             }
           ],
-          dicturl: '',
-          value: formData.documentLabel,
-          setValue: setFormData
+          dicturl: ''
         },
         name: 'documentLabel'
       }
