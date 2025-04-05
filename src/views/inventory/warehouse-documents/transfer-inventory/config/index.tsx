@@ -1,8 +1,34 @@
+import type { ReactNode } from 'react'
+import { Tooltip, type TooltipProps } from 'antd'
 import { getTransferInventoryList } from '@/api/inventory/transferInventory'
+
+// 定义选项类型
+interface TagOption {
+  label: string
+  value: string
+}
+
+// 定义 maxTagPlaceholder 函数的类型
+type MaxTagPlaceholderType = (omittedValues: TagOption[]) => ReactNode
+
+const renderMaxTagPlaceholder: MaxTagPlaceholderType = omittedValues => {
+  const tooltipProps: TooltipProps = {
+    title: omittedValues.map(item => item.label).join(', '),
+    overlayStyle: { pointerEvents: 'none' }
+  }
+
+  return (
+    <Tooltip {...tooltipProps}>
+      <span>+{omittedValues.length}...</span>
+    </Tooltip>
+  )
+}
+
 export const getJson = ({ formData, setFormData }) => {
   const formJson = {
     formConfig: {
-      size: 'small'
+      size: 'small',
+      initialValues: formData
     },
     formItemConfig: {
       queryScope: {
@@ -67,7 +93,9 @@ export const getJson = ({ formData, setFormData }) => {
               }
             ]
           },
-          size: 'samll'
+          size: 'samll',
+          value: formData.queryScope,
+          setValue: (val: any) => setFormData({ ...formData, queryScope: val })
         },
         name: 'queryScope',
         colon: false,
@@ -93,7 +121,9 @@ export const getJson = ({ formData, setFormData }) => {
           optionsfiled: {
             label: 'name',
             value: 'code'
-          }
+          },
+          value: formData.documentDate,
+          setValue: (val: any) => setFormData({ ...formData, documentDate: val })
         },
         name: 'documentDate'
       },
@@ -113,7 +143,9 @@ export const getJson = ({ formData, setFormData }) => {
               value: '2'
             }
           ],
-          allowClear: true
+          allowClear: true,
+          value: formData.auditStatus,
+          setValue: (val: any) => setFormData({ ...formData, auditStatus: val })
         },
         name: 'auditStatus'
       },
@@ -133,7 +165,9 @@ export const getJson = ({ formData, setFormData }) => {
               value: '2'
             }
           ],
-          allowClear: true
+          allowClear: true,
+          value: formData.businessType,
+          setValue: (val: any) => setFormData({ ...formData, businessType: val })
         },
         name: 'businessType'
       },
@@ -180,12 +214,7 @@ export const getJson = ({ formData, setFormData }) => {
           dicturl: '',
           value: formData.outgoingDepartment,
           setValue: (val: any) => setFormData({ ...formData, outgoingDepartment: val }),
-          allowClear: true,
-          a: 1,
-          b: 2,
-          onClear: () => {
-            console.log(1111)
-          }
+          allowClear: true
         },
         name: 'outgoingDepartment'
       },
@@ -229,7 +258,10 @@ export const getJson = ({ formData, setFormData }) => {
               deptName: '利润中心'
             }
           ],
-          dicturl: ''
+          dicturl: '',
+          value: formData.incomingDepartment,
+          setValue: (val: any) => setFormData({ ...formData, incomingDepartment: val }),
+          allowClear: true
         },
         name: 'incomingDepartment'
       },
@@ -281,8 +313,12 @@ export const getJson = ({ formData, setFormData }) => {
               value: '10'
             }
           ],
-          mode: 'multiple',
-          allowClear: true
+          mode: 'multiple', // 明确指定类型
+          allowClear: true,
+          value: formData.documentSource || [],
+          setValue: (val: any) => setFormData({ ...formData, documentSource: val.toString() }),
+          maxTagCount: 2,
+          maxTagPlaceholder: renderMaxTagPlaceholder
         },
         name: 'documentSource'
       },
@@ -321,7 +357,10 @@ export const getJson = ({ formData, setFormData }) => {
               labelName: '产品标签'
             }
           ],
-          dicturl: ''
+          dicturl: '',
+          value: formData.documentLabel,
+          setValue: (val: any) => setFormData({ ...formData, documentLabel: val }),
+          allowClear: true
         },
         name: 'documentLabel'
       }

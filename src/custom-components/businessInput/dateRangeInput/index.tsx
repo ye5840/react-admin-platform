@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { Input, DatePicker } from 'antd'
-import styles from './index.module.less'
-import { CloseOutlined } from '@ant-design/icons'
 import type { InputRef } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
+import './index.less'
 
 interface DateRangeInputProps {
   inputConfig?: objAny
@@ -12,6 +12,18 @@ interface DateRangeInputProps {
     value: string
   }
   rangePickerConfig?: objAny
+  value?: any
+  setValue?: Function
+}
+
+interface stateType {
+  selectContentShow: boolean
+  inputLabel: string
+  inputValue: string
+  customIsClick: boolean
+  rangePickerValue: null | string
+  suffixShow: boolean
+  contentOptions: any[]
 }
 
 const defaultOptions = [
@@ -23,72 +35,87 @@ const defaultOptions = [
 
 const { RangePicker } = DatePicker
 
+const getInitialState = () => ({
+  selectContentShow: false, // 是否展示下拉选择
+  inputLabel: '', // 选择的label的值
+  inputValue: '', // 选择的value的值
+  customIsClick: false, // 自定义是否被点击的标识
+  rangePickerValue: null, // 日期框的值
+  suffixShow: false, // input后缀图标是否展示
+  contentOptions: [] // 下拉选项
+})
+
 const DateRangeInput = (props: DateRangeInputProps) => {
-  const { inputConfig, options, optionsfiled, rangePickerConfig } = props
+  const { inputConfig, options, optionsfiled, rangePickerConfig, value, setValue } = props
   const dateRangeInputRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<InputRef>(null)
 
-  const [dateRangeInputInfo, setDateRangeInputInfo] = useState({
-    selectContentShow: false, // 是否展示下拉选择
-    inputLabel: '', // 选择的label的值
-    inputValue: '', // 选择的value的值
-    customIsClick: false, // 自定义是否被点击的标识
-    rangePickerValue: null, // 日期框的值
-    suffixShow: false // input后缀图标是否展示
-  })
+  const [dateRangeInputInfo, setDateRangeInputInfo] = useState<stateType>(getInitialState())
 
   const handleFocus = () => {
-    setDateRangeInputInfo({
-      ...dateRangeInputInfo,
+    setDateRangeInputInfo(perv => ({
+      ...perv,
       selectContentShow: true
-    })
+    }))
   }
 
-  let contentOptions = []
-  const resultOptions = options && options.length > 0 ? [...options, ...defaultOptions] : [...defaultOptions]
-  if (optionsfiled?.label && optionsfiled?.value) {
-    contentOptions = [...resultOptions].map(item => {
+  useEffect(() => {
+    const resultOptions = options && options.length > 0 ? [...options, ...defaultOptions] : [...defaultOptions]
+    const mapResultOptions = [...resultOptions].map(item => {
       if (item.label === '自定义') {
         return { ...item }
       }
       return {
         ...item,
-        label: item[optionsfiled?.label],
-        value: item[optionsfiled?.value]
+        label: optionsfiled?.label ? item[optionsfiled.label] : undefined,
+        value: optionsfiled?.value ? item[optionsfiled.value] : undefined
       }
     })
-  } else {
-    contentOptions = [...resultOptions]
-  }
+    const contentOptions = optionsfiled?.label && optionsfiled?.value ? mapResultOptions : [...resultOptions]
+    const label = value ? contentOptions.find(item => item.value === value).label : ''
+    setDateRangeInputInfo(perv => ({
+      ...perv,
+      contentOptions,
+      inputValue: value ? value : '',
+      inputLabel: label ? label : ''
+    }))
+  }, [])
 
   const handleSelectClick = (item: { label: string; value: string }) => {
     if (item.label !== '自定义') {
-      setDateRangeInputInfo({
-        ...dateRangeInputInfo,
+      setDateRangeInputInfo(perv => ({
+        ...perv,
         inputLabel: item.label,
         inputValue: item.value,
         selectContentShow: false,
         customIsClick: false,
         rangePickerValue: null
-      })
+      }))
+
+      if (setValue) {
+        setValue(item.value)
+      }
     }
     if (item.label === '自定义') {
-      setDateRangeInputInfo({
-        ...dateRangeInputInfo,
+      setDateRangeInputInfo(perv => ({
+        ...perv,
         inputValue: item.value,
         customIsClick: true
-      })
+      }))
     }
   }
 
   const handleRangPickerChange = (date: any, dateString: string[]) => {
-    setDateRangeInputInfo({
-      ...dateRangeInputInfo,
+    setDateRangeInputInfo(perv => ({
+      ...perv,
       inputLabel: dateString[0] + '~' + dateString[1],
       inputValue: dateString[0] + '~' + dateString[1],
       selectContentShow: false,
       rangePickerValue: date
-    })
+    }))
+    if (setValue) {
+      setValue(dateString[0] + '~' + dateString[1])
+    }
   }
 
   // 是否为 active 状态
@@ -115,54 +142,32 @@ const DateRangeInput = (props: DateRangeInputProps) => {
     }
   }, [dateRangeInputInfo.customIsClick])
 
-  const handleMouseEnter = () => {
-    if (dateRangeInputInfo.inputLabel) {
-      setDateRangeInputInfo({
-        ...dateRangeInputInfo,
-        suffixShow: true
-      })
-    }
-  }
-
-  const handleMouseLeave = () => {
-    setDateRangeInputInfo({
-      ...dateRangeInputInfo,
-      suffixShow: false
-    })
-  }
-
   const handleIconClick = (event: { stopPropagation: () => void }) => {
     event.stopPropagation()
-    setDateRangeInputInfo({
-      selectContentShow: false, // 是否展示下拉选择
-      inputLabel: '', // 选择的label的值
-      inputValue: '', // 选择的value的值
-      customIsClick: false, // 自定义是否被点击的标识
-      rangePickerValue: null, // 日期框的值
-      suffixShow: false // input后缀图标是否展示
-    })
+    setDateRangeInputInfo(perv => ({
+      ...getInitialState(),
+      contentOptions: perv.contentOptions
+    }))
+    setValue?.(value ?? undefined)
   }
 
   return (
-    <div className={styles['dateRangeInput-wrapper']} ref={dateRangeInputRef}>
+    <div className={'dateRangeInput-wrapper'} ref={dateRangeInputRef}>
       <Input
         {...inputConfig}
         ref={inputRef}
-        onFocus={handleFocus}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        suffix={
-          dateRangeInputInfo.suffixShow && <CloseOutlined onClick={handleIconClick} style={{ cursor: 'pointer' }} />
-        }
+        className='date-range-input'
         value={dateRangeInputInfo.inputLabel}
+        onFocus={handleFocus}
+        suffix={<CloseCircleOutlined onClick={handleIconClick} />}
       />
       <Input value={dateRangeInputInfo.inputValue} style={{ display: 'none' }} />
       {dateRangeInputInfo.selectContentShow && (
-        <div className={styles['chooseContent']}>
-          {contentOptions.map(item => {
+        <div className={'chooseContent'}>
+          {dateRangeInputInfo.contentOptions.map(item => {
             return (
               <div
-                className={`${styles['chooseContent-item']} ${isActive(item.value) ? styles['active'] : ''}`}
+                className={`${'chooseContent-item'} ${isActive(item.value) ? 'active' : ''}`}
                 key={item.value}
                 onClick={() => handleSelectClick(item)}
               >

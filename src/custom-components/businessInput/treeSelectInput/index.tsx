@@ -1,33 +1,35 @@
-import type { FC, Key } from 'react'
+import type { Key } from 'react'
 import { useState, useEffect, useRef } from 'react'
 import { Input, Tree } from 'antd'
 import type { TreeDataNode } from 'antd'
-import styles from './index.module.less'
+import { CloseCircleOutlined } from '@ant-design/icons'
+import './index.less'
 
 interface TreeSelectInputProps {
   inputConfig: objAny
   treeConfig: objAny
   value: string | number
-  onChange: Function
+  setValue: Function
 }
 
 type TreeSelectEvent = (selectedKeys: Key[], info: { node: any; selected: boolean }) => void
 
-const TreeSelectInput = (props: TreeSelectInputProps) => {
-  const { inputConfig, treeConfig, value, onChange } = props
-  const treeSelectInputRef = useRef<HTMLDivElement>(null)
-  const [treeSelectInputInfo, setTreeSelectInputInfo] = useState({
-    selectContentShow: false,
-    inputValue: value || ''
-  })
+const getInitialState = () => ({
+  selectContentShow: false, // 是否展示下拉选择
+  inputLabel: undefined, // 选择的label的值
+  inputValue: undefined // 选择的value的值
+})
 
-  // 监听外部 value 变化
-  useEffect(() => {
-    setTreeSelectInputInfo(prev => ({
-      ...prev,
-      inputValue: value || ''
-    }))
-  }, [value])
+interface stateType {
+  selectContentShow: boolean
+  inputLabel: string | undefined
+  inputValue: string | number | undefined
+}
+
+const TreeSelectInput = (props: TreeSelectInputProps) => {
+  const { inputConfig, treeConfig, value, setValue } = props
+  const treeSelectInputRef = useRef<HTMLDivElement>(null)
+  const [treeSelectInputInfo, setTreeSelectInputInfo] = useState<stateType>(getInitialState())
 
   const handleFocus = () => {
     setTreeSelectInputInfo({
@@ -54,27 +56,15 @@ const TreeSelectInput = (props: TreeSelectInputProps) => {
 
   // 处理选择树节点
   const handleTreeSelect: TreeSelectEvent = (selectedValue, { node, selected }) => {
-    const inputValue = findPathByKey(treeConfig.treeData, node.key)
+    const inputLabel = findPathByKey(treeConfig.treeData, node.key)
     // 更新本地状态
     setTreeSelectInputInfo({
       selectContentShow: false, // 选择后关闭弹窗
-      inputValue: inputValue || ''
+      inputValue: node.key,
+      inputLabel: inputLabel
     })
 
-    // 通知 Form.Item 值已更新
-    onChange?.(inputValue)
-  }
-
-  // 处理输入值变化
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // const newValue = e.target.value
-    // // 更新本地状态
-    // setTreeSelectInputInfo({
-    //   ...treeSelectInputInfo,
-    //   inputValue: newValue
-    // })
-    // // 通知 Form.Item 值已更新
-    // onChange?.(newValue)
+    setValue?.(node.key)
   }
 
   // 添加 useEffect 监听点击事件
@@ -91,16 +81,33 @@ const TreeSelectInput = (props: TreeSelectInputProps) => {
     }
   }, [])
 
+  useEffect(() => {
+    const inputLabel = findPathByKey(treeConfig.treeData, value)
+    setTreeSelectInputInfo(prev => ({
+      ...prev,
+      inputValue: value ?? undefined,
+      inputLabel: inputLabel ?? undefined
+    }))
+  }, [])
+
+  const handleIconClick = (event: { stopPropagation: () => void }) => {
+    event.stopPropagation()
+    setTreeSelectInputInfo(perv => getInitialState())
+    setValue?.(value ?? undefined)
+  }
+
   return (
-    <div className={styles['treeSelectInput-wrapper']} ref={treeSelectInputRef}>
+    <div className={'treeSelectInput-wrapper'} ref={treeSelectInputRef}>
       <Input
-        onFocus={handleFocus}
         {...inputConfig}
-        value={treeSelectInputInfo.inputValue}
-        // onChange={handleInputChange}
+        className='tree-select-input'
+        value={treeSelectInputInfo.inputLabel}
+        onFocus={handleFocus}
+        suffix={<CloseCircleOutlined onClick={handleIconClick} />}
       ></Input>
+      <Input value={treeSelectInputInfo.inputValue} style={{ display: 'none' }} />
       {treeSelectInputInfo.selectContentShow && (
-        <Tree {...treeConfig} className={styles['tree']} onSelect={handleTreeSelect}></Tree>
+        <Tree {...treeConfig} className={'tree'} onSelect={handleTreeSelect}></Tree>
       )}
     </div>
   )

@@ -1,0 +1,54 @@
+.dateRangeInput-wrapper{
+  position: relative;
+}
+.chooseContent{
+  position: absolute;
+  width: 100%;
+  background-color: #fff;
+  z-index: 999;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, .2);
+  padding: 8px 0;
+  border-radius: 8px;
+  .chooseContent-item{
+    cursor: pointer;
+    padding-left: 6px;
+    &:hover{
+      background-color: #f9f9f9;
+    }
+  }
+  .active{
+    background-color: #f0f8ff;
+    color: blue;
+    &:hover{
+      background-color: #f0f8ff;
+    }
+  }
+}
+.date-range-input {
+  .ant-input-suffix {
+    .anticon-close-circle {
+      color: rgba(0, 0, 0, 0.25);
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 50%;
+      background-color: transparent;
+      transition: all 0.3s;
+      opacity: 0;
+
+      &:hover {
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.45);
+      }
+    }
+  }
+
+  &:hover,
+  &.ant-input-affix-wrapper-focused,
+  &.ant-input-affix-wrapper-has-value {
+    .ant-input-suffix {
+      .anticon-close-circle {
+        opacity: 1;
+      }
+    }
+  }
+}

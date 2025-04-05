@@ -1,28 +1,35 @@
 import { useCallback, useState } from 'react'
 import { Checkbox, Select, Divider } from 'antd'
-import styles from './index.module.less'
+import './index.less'
 
 const CheckboxGroup = Checkbox.Group
 
 const CheckboxSelect = (props: objAny) => {
+  const { options, value, setValue } = props
   const [checkboxSelectInfo, setCheckboxSelectInfo] = useState({
     checkedList: [],
-    value: []
+    value: setValue ? value : []
   })
 
   const handleOnChange = (list: any) => {
-    console.log(list)
     setCheckboxSelectInfo({
       checkedList: list,
       value: list
     })
+    if (setValue) {
+      setValue(list)
+    }
   }
 
   const handleCheckAllChange = () => {
+    const list = options.map((item: { value: any }) => item.value)
     setCheckboxSelectInfo({
-      checkedList: props.options.map((item: { value: any }) => item.value),
-      value: props.options.map((item: { value: any }) => item.value)
+      checkedList: list,
+      value: list
     })
+    if (setValue) {
+      setValue(list)
+    }
   }
 
   const handleNotChecked = () => {
@@ -30,15 +37,21 @@ const CheckboxSelect = (props: objAny) => {
       checkedList: [],
       value: []
     })
+    if (setValue) {
+      setValue([])
+    }
   }
 
   const handleAgainstSelectChange = () => {
-    const list = props.options.filter((item: { value: any }) => !checkboxSelectInfo.checkedList.includes(item.value))
+    const list = options.filter((item: { value: any }) => !checkboxSelectInfo.checkedList.includes(item.value))
     const valueList = list.map(item => item.value)
     setCheckboxSelectInfo({
       checkedList: valueList,
       value: valueList
     })
+    if (setValue) {
+      setValue(valueList)
+    }
   }
 
   const handleSelectChange = (list: any) => {
@@ -46,6 +59,9 @@ const CheckboxSelect = (props: objAny) => {
       checkedList: list,
       value: list
     })
+    if (setValue) {
+      setValue(list)
+    }
   }
 
   const handleSelectClear = () => {
@@ -55,17 +71,17 @@ const CheckboxSelect = (props: objAny) => {
   const customDropdownRender = useCallback(() => {
     return (
       <>
-        <div className={styles['checkbox-operate-wrapper']}>
+        <div className='checkbox-operate-wrapper'>
           <div onClick={handleCheckAllChange}>全选</div>
           <div onClick={handleAgainstSelectChange}>反选</div>
           <div onClick={handleNotChecked}>无</div>
           <div>
-            已选 {checkboxSelectInfo.value.length} / {props.options.length}
+            已选 {checkboxSelectInfo.value?.length || 0} / {options.length}
           </div>
         </div>
         <Divider style={{ margin: '8px 0' }} />
         <CheckboxGroup
-          options={props.options}
+          options={options}
           value={checkboxSelectInfo.checkedList}
           onChange={handleOnChange}
           style={{

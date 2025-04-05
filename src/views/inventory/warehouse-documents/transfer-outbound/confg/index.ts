@@ -137,6 +137,7 @@ export const getJson = () => {
               value: '4'
             }
           ],
+          value: [],
           mode: 'multiple',
           allowClear: true
         }
@@ -263,7 +264,8 @@ export const getJson = () => {
             }
           ],
           mode: 'multiple',
-          allowClear: true
+          allowClear: true,
+          value: []
         }
       },
       documentSource: {
@@ -315,7 +317,8 @@ export const getJson = () => {
             }
           ],
           mode: 'multiple',
-          allowClear: true
+          allowClear: true,
+          value: []
         }
       },
       documentLabel: {

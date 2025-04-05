@@ -1,9 +1,16 @@
-import type { FC } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { Select, Table } from 'antd'
 import type { AnyObject } from 'antd/es/_util/type'
 
-const TableSelect: FC = (props: objAny) => {
+interface TableSelectProp {
+  columns: any[]
+  optionsfiled?: { label: string; value: string }
+  data: any[]
+  value: any
+  setValue: Function
+  [x: string]: any
+}
+const TableSelect = (props: TableSelectProp) => {
   const { columns, optionsfiled, data, value, setValue, ...arg } = props
   const [tableSelectInfo, setTableSelectInfo] = useState({
     selectValue: setValue ? value : undefined,
