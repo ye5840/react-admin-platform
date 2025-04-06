@@ -4,14 +4,14 @@ import TableForm from '@/custom-components/businessForm/tableForm'
 import TableList from '@/custom-components/businessTable/tableList'
 
 const getInitFormData = () => ({
-  documentDate: '1',
-  auditStatus: '1',
-  businessType: '1',
-  outgoingDepartment: '1',
-  incomingDepartment: '1',
-  documentSource: '1',
-  documentLabel: '1',
-  queryScope: 'parent 1-0-0'
+  // documentDate: '1',
+  // auditStatus: '1',
+  // businessType: '1',
+  // outgoingDepartment: '1',
+  // incomingDepartment: '1',
+  // documentSource: '1',
+  // documentLabel: '1',
+  // queryScope: 'parent 1-0-0'
 })
 const TransferInventory: FC = () => {
   const [formData, setFormData] = useState(getInitFormData())

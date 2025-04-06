@@ -1,7 +1,11 @@
-export const getJson = () => {
+import { renderMaxTagPlaceholder } from '@/custom-components/businessTooltip'
+import { getTransferOutboundList } from '@/api/inventory/transferOutbound'
+
+export const getJson = ({ formData, setFormData }) => {
   const formJson = {
     formConfig: {
-      size: 'small'
+      size: 'small',
+      initialValues: formData
     },
     formItemConfig: {
       queryScope: {
@@ -65,7 +69,10 @@ export const getJson = () => {
                 ]
               }
             ]
-          }
+          },
+          size: 'samll',
+          value: formData.queryScope,
+          setValue: (val: any) => setFormData({ ...formData, queryScope: val })
         },
         name: 'queryScope',
         colon: false,
@@ -91,8 +98,11 @@ export const getJson = () => {
           optionsfiled: {
             label: 'name',
             value: 'code'
-          }
-        }
+          },
+          value: formData.documentDate,
+          setValue: (val: any) => setFormData({ ...formData, documentDate: val })
+        },
+        name: 'documentDate'
       },
       auditStatus: {
         label: '审核状态',
@@ -110,8 +120,11 @@ export const getJson = () => {
               value: '2'
             }
           ],
-          allowClear: true
-        }
+          allowClear: true,
+          value: formData.auditStatus,
+          setValue: (val: any) => setFormData({ ...formData, auditStatus: val })
+        },
+        name: 'auditStatus'
       },
       transferStatus: {
         label: '调拨状态',
@@ -137,10 +150,14 @@ export const getJson = () => {
               value: '4'
             }
           ],
-          value: [],
           mode: 'multiple',
-          allowClear: true
-        }
+          allowClear: true,
+          value: formData.transferStatus || [],
+          setValue: (val: any) => setFormData({ ...formData, transferStatus: val.toString() }),
+          maxTagCount: 1,
+          maxTagPlaceholder: renderMaxTagPlaceholder
+        },
+        name: 'transferStatus'
       },
       businessType: {
         label: '业务类型',
@@ -158,8 +175,11 @@ export const getJson = () => {
               value: '2'
             }
           ],
-          allowClear: true
-        }
+          allowClear: true,
+          value: formData.businessType,
+          setValue: (val: any) => setFormData({ ...formData, businessType: val })
+        },
+        name: 'businessType'
       },
       outgoingDepartment: {
         label: '调出部门',
@@ -201,8 +221,12 @@ export const getJson = () => {
               deptName: '利润中心'
             }
           ],
-          dicturl: ''
-        }
+          dicturl: '',
+          value: formData.outgoingDepartment,
+          setValue: (val: any) => setFormData({ ...formData, outgoingDepartment: val }),
+          allowClear: true
+        },
+        name: 'outgoingDepartment'
       },
       incomingDepartment: {
         label: '调入部门',
@@ -244,8 +268,12 @@ export const getJson = () => {
               deptName: '利润中心'
             }
           ],
-          dicturl: ''
-        }
+          dicturl: '',
+          value: formData.incomingDepartment,
+          setValue: (val: any) => setFormData({ ...formData, incomingDepartment: val }),
+          allowClear: true
+        },
+        name: 'incomingDepartment'
       },
       discrepancyHandlingStatus: {
         label: '差异处理状态',
@@ -265,8 +293,12 @@ export const getJson = () => {
           ],
           mode: 'multiple',
           allowClear: true,
-          value: []
-        }
+          value: formData.discrepancyHandlingStatus || [],
+          setValue: (val: any) => setFormData({ ...formData, discrepancyHandlingStatus: val.toString() }),
+          maxTagCount: 1,
+          maxTagPlaceholder: renderMaxTagPlaceholder
+        },
+        name: 'discrepancyHandlingStatus'
       },
       documentSource: {
         label: '单据来源',
@@ -318,8 +350,12 @@ export const getJson = () => {
           ],
           mode: 'multiple',
           allowClear: true,
-          value: []
-        }
+          value: formData.documentSource || [],
+          setValue: (val: any) => setFormData({ ...formData, documentSource: val.toString() }),
+          maxTagCount: 1,
+          maxTagPlaceholder: renderMaxTagPlaceholder
+        },
+        name: 'documentSource'
       },
       documentLabel: {
         label: '单据标签',
@@ -356,8 +392,12 @@ export const getJson = () => {
               labelName: '产品标签'
             }
           ],
-          dicturl: ''
-        }
+          dicturl: '',
+          value: formData.documentLabel,
+          setValue: (val: any) => setFormData({ ...formData, documentLabel: val }),
+          allowClear: true
+        },
+        name: 'documentLabel'
       }
     }
   }
@@ -504,9 +544,15 @@ export const getJson = () => {
       x: 15000
     }
   }
+
+  const api = {
+    list: getTransferOutboundList
+  }
+
   return {
     formJson,
     cardConfig,
-    tableConfig
+    tableConfig,
+    api
   }
 }

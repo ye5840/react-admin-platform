@@ -1,3 +1,32 @@
 .ant-table-cell:nth-last-child(1) {
   cursor: pointer;
 }
+
+.react-resizable {
+  position: relative;
+  background-clip: padding-box;
+}
+
+.react-resizable-handle {
+  position: absolute;
+  right: -5px;
+  bottom: 0;
+  z-index: 1;
+  width: 10px;
+  height: 100%;
+  cursor: col-resize;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.table-list {
+  .ant-table-thead>tr>th {
+    position: relative;
+
+    &:hover .react-resizable-handle {
+      background-color: #f0f0f0;
+    }
+  }
+}

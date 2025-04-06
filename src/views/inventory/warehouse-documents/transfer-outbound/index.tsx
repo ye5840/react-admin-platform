@@ -1,18 +1,32 @@
-import { useEffect, useRef, type FC } from 'react'
-import { getJson } from './confg'
+import { useState, type FC } from 'react'
+import { getJson } from './config'
 import TableForm from '@/custom-components/businessForm/tableForm'
 import TableList from '@/custom-components/businessTable/tableList'
 
-const { formJson, cardConfig, tableConfig } = getJson()
+const getInitFormData = () => ({
+  // documentDate: '1',
+  // auditStatus: '1',
+  // businessType: '1',
+  // outgoingDepartment: '1',
+  // incomingDepartment: '1',
+  // documentSource: '1',
+  // documentLabel: '1',
+  // queryScope: 'parent 1-0-0',
+  // transferStatus: '1',
+  // discrepancyHandlingStatus: '1'
+})
 const TransferOutbound: FC = () => {
-  const tableFormRef = useRef<any>()
-  useEffect(() => {
-    console.log(tableFormRef.current)
-  }, [])
+  const [formData, setFormData] = useState(getInitFormData())
+  const { formJson, tableConfig, api } = getJson({ formData, setFormData })
   return (
     <>
-      <TableForm name='transferOutbound' formRef={tableFormRef} formJson={formJson}></TableForm>
-      <TableList tableFormRef={tableFormRef} tableConfig={tableConfig}></TableList>
+      <TableForm
+        formJson={formJson}
+        initFormData={getInitFormData()}
+        formData={formData}
+        setFormData={setFormData}
+      ></TableForm>
+      <TableList tableConfig={tableConfig} api={api} formData={formData}></TableList>
     </>
   )
 }
