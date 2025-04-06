@@ -44,4 +44,6 @@ export interface AppState {
   themeMode?: ThemeEnum
 
   appConfig: AppConfig | null
+
+  tableHeight: number | null
 }

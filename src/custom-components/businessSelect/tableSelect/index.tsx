@@ -11,7 +11,7 @@ interface TableSelectProp {
   [x: string]: any
 }
 const TableSelect = (props: TableSelectProp) => {
-  const { columns, optionsfiled, data, value, setValue, ...arg } = props
+  const { columns, optionsfiled, data, value, setValue, labelName, ...arg } = props
   const [tableSelectInfo, setTableSelectInfo] = useState({
     selectValue: setValue ? value : undefined,
     selectOptions: [],
@@ -74,6 +74,7 @@ const TableSelect = (props: TableSelectProp) => {
 
   return (
     <Select
+      placeholder={`请选择${labelName}`}
       {...props}
       value={tableSelectInfo.selectValue}
       dropdownRender={menu => customDropdownRender(menu)}

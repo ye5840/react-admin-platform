@@ -10,6 +10,7 @@ interface TreeSelectInputProps {
   treeConfig: objAny
   value: string | number
   setValue: Function
+  labelName: string | undefined
 }
 
 type TreeSelectEvent = (selectedKeys: Key[], info: { node: any; selected: boolean }) => void
@@ -27,7 +28,7 @@ interface stateType {
 }
 
 const TreeSelectInput = (props: TreeSelectInputProps) => {
-  const { inputConfig, treeConfig, value, setValue } = props
+  const { inputConfig, treeConfig, value, setValue, labelName } = props
   const treeSelectInputRef = useRef<HTMLDivElement>(null)
   const [treeSelectInputInfo, setTreeSelectInputInfo] = useState<stateType>(getInitialState())
 
@@ -82,7 +83,7 @@ const TreeSelectInput = (props: TreeSelectInputProps) => {
   }, [])
 
   useEffect(() => {
-    const inputLabel = findPathByKey(treeConfig.treeData, value)
+    const inputLabel = findPathByKey(treeConfig.treeData, value as string)
     setTreeSelectInputInfo(prev => ({
       ...prev,
       inputValue: value ?? undefined,
@@ -99,6 +100,7 @@ const TreeSelectInput = (props: TreeSelectInputProps) => {
   return (
     <div className={'treeSelectInput-wrapper'} ref={treeSelectInputRef}>
       <Input
+        placeholder={`请选择${labelName}`}
         {...inputConfig}
         className='tree-select-input'
         value={treeSelectInputInfo.inputLabel}

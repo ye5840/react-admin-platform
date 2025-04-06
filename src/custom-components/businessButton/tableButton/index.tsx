@@ -3,9 +3,14 @@ import { ContentWrap } from '@/components/ContentWrap'
 import BasicButton from '@/custom-components/basicButton'
 import './index.less'
 
-interface tableButtonProp {}
+interface tableButtonProp {
+  form: objAny
+  setFormData?: Function
+  initFormData?: objAny
+}
 
 const TableButton = (props: tableButtonProp) => {
+  const { setFormData, initFormData, form } = props
   const [tableButtonConfig, setTableButtonConfig] = useState({
     expand: false
   })
@@ -57,7 +62,11 @@ const TableButton = (props: tableButtonProp) => {
 
   const searchBtnConfig = {
     reset: {
-      name: '重置'
+      name: '重置',
+      onClick: async () => {
+        await setFormData?.(initFormData)
+        form.resetFields()
+      }
     },
     seniorSearch: {
       name: '高级搜索'

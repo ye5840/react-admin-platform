@@ -5,10 +5,10 @@ import './index.less'
 const CheckboxGroup = Checkbox.Group
 
 const CheckboxSelect = (props: objAny) => {
-  const { options, value, setValue } = props
+  const { options, value, setValue, labelName } = props
   const [checkboxSelectInfo, setCheckboxSelectInfo] = useState({
-    checkedList: [],
-    value: setValue ? value : []
+    checkedList: value && setValue ? value?.split(',') : [],
+    value: setValue ? value?.split(',') : []
   })
 
   const handleOnChange = (list: any) => {
@@ -16,9 +16,7 @@ const CheckboxSelect = (props: objAny) => {
       checkedList: list,
       value: list
     })
-    if (setValue) {
-      setValue(list)
-    }
+    setValue?.(list)
   }
 
   const handleCheckAllChange = () => {
@@ -27,9 +25,7 @@ const CheckboxSelect = (props: objAny) => {
       checkedList: list,
       value: list
     })
-    if (setValue) {
-      setValue(list)
-    }
+    setValue?.(list)
   }
 
   const handleNotChecked = () => {
@@ -37,9 +33,7 @@ const CheckboxSelect = (props: objAny) => {
       checkedList: [],
       value: []
     })
-    if (setValue) {
-      setValue([])
-    }
+    setValue?.([])
   }
 
   const handleAgainstSelectChange = () => {
@@ -49,9 +43,7 @@ const CheckboxSelect = (props: objAny) => {
       checkedList: valueList,
       value: valueList
     })
-    if (setValue) {
-      setValue(valueList)
-    }
+    setValue?.(valueList)
   }
 
   const handleSelectChange = (list: any) => {
@@ -59,9 +51,7 @@ const CheckboxSelect = (props: objAny) => {
       checkedList: list,
       value: list
     })
-    if (setValue) {
-      setValue(list)
-    }
+    setValue?.(list)
   }
 
   const handleSelectClear = () => {
@@ -96,6 +86,7 @@ const CheckboxSelect = (props: objAny) => {
 
   return (
     <Select
+      placeholder={`请选择${labelName}`}
       {...props}
       dropdownRender={menu => customDropdownRender(menu)}
       value={checkboxSelectInfo.value}

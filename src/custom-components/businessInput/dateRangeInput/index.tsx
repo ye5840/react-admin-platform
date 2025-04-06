@@ -14,6 +14,7 @@ interface DateRangeInputProps {
   rangePickerConfig?: objAny
   value?: any
   setValue?: Function
+  labelName?: string
 }
 
 interface stateType {
@@ -46,7 +47,7 @@ const getInitialState = () => ({
 })
 
 const DateRangeInput = (props: DateRangeInputProps) => {
-  const { inputConfig, options, optionsfiled, rangePickerConfig, value, setValue } = props
+  const { inputConfig, options, optionsfiled, rangePickerConfig, value, setValue, labelName } = props
   const dateRangeInputRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<InputRef>(null)
 
@@ -154,6 +155,7 @@ const DateRangeInput = (props: DateRangeInputProps) => {
   return (
     <div className={'dateRangeInput-wrapper'} ref={dateRangeInputRef}>
       <Input
+        placeholder={`请选择${labelName}`}
         {...inputConfig}
         ref={inputRef}
         className='date-range-input'

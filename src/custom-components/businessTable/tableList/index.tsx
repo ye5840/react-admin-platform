@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Table } from 'antd'
 import { ContentWrap } from '@/components/ContentWrap'
 import { SettingOutlined } from '@ant-design/icons'
+import { useAppSelector } from '@/stores'
 import { useRequest } from 'ahooks'
 import './index.less'
 
@@ -27,6 +28,8 @@ interface resultDataType extends PaginationParams {
 }
 
 const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData }) => {
+  const { tableHeight } = useAppSelector(state => state.app)
+
   // 合并分页和查询条件的状态
   const [queryParams, setQueryParams] = useState<PaginationParams>({
     currentPage: 1,
@@ -99,7 +102,12 @@ const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData }) => {
 
   return (
     <ContentWrap>
-      <Table rowKey='id' loading={loading} {...componentTableProp}></Table>
+      <Table
+        rowKey='id'
+        loading={loading}
+        {...componentTableProp}
+        scroll={{ ...componentTableProp.scroll, y: tableHeight }}
+      ></Table>
     </ContentWrap>
   )
 }

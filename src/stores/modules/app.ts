@@ -7,7 +7,8 @@ import { deepMerge } from '@/utils'
 const initialState: AppState = {
   appMode: undefined,
   themeMode: undefined,
-  appConfig: Persistent.getLocal(APP_CONFIG_KEY)
+  appConfig: Persistent.getLocal(APP_CONFIG_KEY),
+  tableHeight: 0
 }
 
 const app = createSlice({
@@ -20,6 +21,9 @@ const app = createSlice({
     setThemeMode: (state, action) => {
       state.themeMode = action.payload
     },
+    setTableHeight: (state, action) => {
+      state.tableHeight = action.payload
+    },
     setAppConfig: (state, action) => {
       state.appConfig = deepMerge(state.appConfig || {}, action.payload)
       Persistent.setLocal(APP_CONFIG_KEY, state.appConfig, true)
@@ -28,11 +32,12 @@ const app = createSlice({
       state.appMode = undefined
       state.themeMode = undefined
       state.appConfig = null
+      state.tableHeight = 0
       Persistent.clearAll()
     }
   }
 })
 
-export const { setAppMode, setThemeMode, setAppConfig, resetState } = app.actions
+export const { setAppMode, setThemeMode, setAppConfig, resetState, setTableHeight } = app.actions
 
 export default app.reducer

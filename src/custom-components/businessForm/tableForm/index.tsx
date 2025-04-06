@@ -1,3 +1,4 @@
+import { Form } from 'antd'
 import { ContentWrap } from '@/components/ContentWrap'
 import TableButton from '@/custom-components/businessButton/tableButton'
 import BasicForm from '@/custom-components/basicForm'
@@ -8,16 +9,18 @@ interface TableFormProp {
   cardConfig?: objAny
   formData: objAny
   setFormData: Function
+  initFormData: objAny
 }
 
 const TableForm = (props: TableFormProp) => {
-  const { formJson, cardConfig, formData, setFormData } = props
+  const { formJson, cardConfig, formData, setFormData, initFormData } = props
+  const [form] = Form.useForm()
 
   return (
     <div className='tableForm'>
-      <TableButton></TableButton>
+      <TableButton form={form} initFormData={initFormData} setFormData={setFormData}></TableButton>
       <ContentWrap {...cardConfig}>
-        <BasicForm formJson={formJson} formData={formData} setFormData={setFormData}></BasicForm>
+        <BasicForm form={form} formJson={formJson} formData={formData} setFormData={setFormData}></BasicForm>
       </ContentWrap>
     </div>
   )
