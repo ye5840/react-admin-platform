@@ -452,7 +452,8 @@ export const getJson = ({ formData, setFormData }) => {
     scroll: {
       x: 15000
     },
-    dataSource: []
+    dataSource: [],
+    bordered: true
   }
 
   const api = {

@@ -1,9 +1,13 @@
-import type { FC } from 'react'
 import { Select } from 'antd'
 
-const CustomSelect: FC = (props: objAny) => {
-  const { labelName } = props
-  return <Select placeholder={`请选择${labelName}`} {...props}></Select>
+interface CustomSelectProp {
+  labelName: string
+  [x: string]: any
+}
+const CustomSelect = (props: CustomSelectProp) => {
+  const { labelName, ...rest } = props
+
+  return <Select placeholder={`请选择${labelName}`} {...rest}></Select>
 }
 
 export default CustomSelect

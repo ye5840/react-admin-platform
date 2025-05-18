@@ -38,6 +38,15 @@ const CompoRoute: RouteObject = {
             title: '调拨入库',
             key: 'transferInventory'
           }
+        },
+        {
+          path: 'region',
+          name: 'Region',
+          element: LazyLoad(lazy(() => import('@/views/inventory/warehouse-documents/region/index'))),
+          meta: {
+            title: '区域',
+            key: 'region'
+          }
         }
       ]
     }
