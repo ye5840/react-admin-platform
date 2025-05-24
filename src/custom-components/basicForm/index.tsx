@@ -20,7 +20,7 @@ const BasicForm = (props: BasicFormProp) => {
         const Component = componentMap[formItemConfig[key]?.type]
         return (
           <Form.Item {...formItemConfig[key]} key={key}>
-            {Component && <Component {...formItemConfig[key].component} labelName={formItemConfig[key].label} />}
+            {Component && <Component {...formItemConfig[key].component} labelName={formItemConfig[key].labelName} />}
           </Form.Item>
         )
       })}

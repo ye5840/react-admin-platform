@@ -9,7 +9,7 @@ export const getJson = ({ formData, setFormData }) => {
     },
     formItemConfig: {
       queryScope: {
-        label: '查询范围',
+        labelName: '查询范围',
         type: 'treeSelectInput',
         component: {
           treeConfig: {
@@ -80,7 +80,7 @@ export const getJson = ({ formData, setFormData }) => {
         wrapperCol: { span: 24 }
       },
       documentDate: {
-        label: '单据日期',
+        labelName: '单据日期',
         type: 'dateRangeInput',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -105,7 +105,7 @@ export const getJson = ({ formData, setFormData }) => {
         name: 'documentDate'
       },
       auditStatus: {
-        label: '审核状态',
+        labelName: '审核状态',
         type: 'select',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -127,7 +127,7 @@ export const getJson = ({ formData, setFormData }) => {
         name: 'auditStatus'
       },
       transferStatus: {
-        label: '调拨状态',
+        labelName: '调拨状态',
         type: 'checkboxSelect',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -160,7 +160,7 @@ export const getJson = ({ formData, setFormData }) => {
         name: 'transferStatus'
       },
       businessType: {
-        label: '业务类型',
+        labelName: '业务类型',
         type: 'select',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -182,7 +182,7 @@ export const getJson = ({ formData, setFormData }) => {
         name: 'businessType'
       },
       outgoingDepartment: {
-        label: '调出部门',
+        labelName: '调出部门',
         type: 'tableSelect',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -229,7 +229,7 @@ export const getJson = ({ formData, setFormData }) => {
         name: 'outgoingDepartment'
       },
       incomingDepartment: {
-        label: '调入部门',
+        labelName: '调入部门',
         type: 'tableSelect',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -276,7 +276,7 @@ export const getJson = ({ formData, setFormData }) => {
         name: 'incomingDepartment'
       },
       discrepancyHandlingStatus: {
-        label: '差异处理状态',
+        labelName: '差异处理状态',
         type: 'checkboxSelect',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -301,7 +301,7 @@ export const getJson = ({ formData, setFormData }) => {
         name: 'discrepancyHandlingStatus'
       },
       documentSource: {
-        label: '单据来源',
+        labelName: '单据来源',
         type: 'checkboxSelect',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -358,7 +358,7 @@ export const getJson = ({ formData, setFormData }) => {
         name: 'documentSource'
       },
       documentLabel: {
-        label: '单据标签',
+        labelName: '单据标签',
         type: 'tableSelect',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },

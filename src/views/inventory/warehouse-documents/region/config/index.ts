@@ -12,7 +12,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
     },
     formItemConfig: {
       guojia: {
-        label: '国家',
+        labelName: '国家',
         type: 'select',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -36,7 +36,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
         }
       },
       sheng: {
-        label: '省',
+        labelName: '省',
         type: 'select',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -63,7 +63,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
         }
       },
       shi: {
-        label: '市',
+        labelName: '市',
         type: 'select',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -90,7 +90,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
         }
       },
       qu: {
-        label: '区',
+        labelName: '区',
         type: 'select',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
@@ -108,16 +108,22 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
         next: undefined
       },
       material: {
-        label: '物料',
+        labelName: '物料',
         type: 'tableModalSelect',
         labelCol: { span: 24 },
         wrapperCol: { span: 24 },
         component: {
           value: formData.material,
           setValue: (val: any) => setFormData({ ...formData, material: val }),
+          mode: 'multiple',
+          optionsFieds: {
+            label: 'documentNumber',
+            value: 'id'
+          },
           modalConfig: {
             title: '物料列表'
           },
+          options: [],
           tableConfig: {
             columns: [
               { title: '单据日期', dataIndex: 'documentDate', width: widthTypeOne },
@@ -221,16 +227,26 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
               x: 15000
             },
             dataSource: [],
+            // rowSelection: { type: 'radio' },
+            // onRow: (record: any) => ({
+            //   onClick: (event: any) => {
+            //     console.log(record, event)
+            //   }
+            // }),
             bordered: true
+          },
+          api: {
+            list: getTransferInventoryList
           },
           formJson: {
             formConfig: {
               size: 'small',
-              initialValues: formData
+              initialValues: formData,
+              className: 'regionWuliaoForm'
             },
             formItemConfig: {
               queryScope: {
-                label: '查询范围',
+                labelName: '查询范围',
                 type: 'treeSelectInput',
                 component: {
                   treeConfig: {
@@ -301,7 +317,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
                 wrapperCol: { span: 24 }
               },
               documentDate: {
-                label: '单据日期',
+                labelName: '单据日期',
                 type: 'dateRangeInput',
                 labelCol: { span: 24 },
                 wrapperCol: { span: 24 },
@@ -326,7 +342,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
                 name: 'documentDate'
               },
               auditStatus: {
-                label: '审核状态',
+                labelName: '审核状态',
                 type: 'select',
                 labelCol: { span: 24 },
                 wrapperCol: { span: 24 },
@@ -348,7 +364,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
                 name: 'auditStatus'
               },
               businessType: {
-                label: '业务类型',
+                labelName: '业务类型',
                 type: 'select',
                 labelCol: { span: 24 },
                 wrapperCol: { span: 24 },
@@ -370,7 +386,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
                 name: 'businessType'
               },
               outgoingDepartment: {
-                label: '调出部门',
+                labelName: '调出部门',
                 type: 'tableSelect',
                 labelCol: { span: 24 },
                 wrapperCol: { span: 24 },
@@ -417,7 +433,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
                 name: 'outgoingDepartment'
               },
               incomingDepartment: {
-                label: '调入部门',
+                labelName: '调入部门',
                 type: 'tableSelect',
                 labelCol: { span: 24 },
                 wrapperCol: { span: 24 },
@@ -464,7 +480,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
                 name: 'incomingDepartment'
               },
               documentLabel: {
-                label: '单据标签',
+                labelName: '单据标签',
                 type: 'tableSelect',
                 labelCol: { span: 24 },
                 wrapperCol: { span: 24 },
