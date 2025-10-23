@@ -10,15 +10,15 @@ interface tableListProp {
   tableConfig: objAny
   api: objAny
   formData: objAny
+  useDataSource: {
+    dataSource: any[]
+    setDataSource: Function
+  }
 }
 
 interface PaginationParams {
   currentPage: number
   pageSize: number
-}
-
-interface QueryParams extends PaginationParams {
-  [key: string]: unknown // 动态表单值
 }
 
 interface resultDataType extends PaginationParams {
@@ -27,8 +27,9 @@ interface resultDataType extends PaginationParams {
   totalPages: number
 }
 
-const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData }) => {
-  const { tableHeight } = useAppSelector(state => state.app)
+const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData, useDataSource }) => {
+  const { tableHeight } = useAppSelector((state: { app: any }) => state.app)
+  const { dataSource, setDataSource } = useDataSource
 
   // 合并分页和查询条件的状态
   const [queryParams, setQueryParams] = useState<PaginationParams>({
@@ -36,10 +37,10 @@ const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData }) => {
     pageSize: 10
   })
 
-  const { loading, data, run } = useRequest<resultDataType, any>(params => api.list(params), {
+  const { loading, data, run } = useRequest<resultDataType, any>((params: any) => api.list(params), {
     manual: true, // 手动控制
     defaultParams: [queryParams],
-    onSuccess: result => {
+    onSuccess: (result: { list: any; total: any }) => {
       // 成功回调处理
       setComponentTableProp(prev => ({
         ...prev,
@@ -50,6 +51,7 @@ const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData }) => {
           showTotal: () => `总条数为 ${result?.total || 0} `
         }
       }))
+      setDataSource(result?.list)
     }
   })
 
@@ -85,6 +87,7 @@ const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData }) => {
         width: 30
       }
     ],
+    dataSource,
     pagination: {
       current: queryParams.currentPage,
       pageSize: queryParams.pageSize,

@@ -4,18 +4,20 @@ import * as componentMap from '@/custom-components/index'
 interface BasicFormProp {
   form: objAny
   formJson: objAny
-  formData: objAny
-  setFormData: Function
+  useForm: {
+    formData: objAny
+    setFormData: Function
+  }
 }
 
 const BasicForm = (props: BasicFormProp) => {
   const { formConfig, formItemConfig } = props.formJson
-  const { setFormData, form, formData } = props
+  const { useForm, form, formData } = props
   const hanldeOnValuesChange = () => {
-    setFormData({ ...form.getFieldsValue() })
+    useForm.setFormData({ ...form.getFieldsValue() })
   }
   return (
-    <Form form={form} {...formConfig} onValuesChange={hanldeOnValuesChange}>
+    <Form className={'mycomponents'} form={form} {...formConfig} onValuesChange={hanldeOnValuesChange}>
       {Object.keys(formItemConfig || []).map(key => {
         const Component = componentMap[formItemConfig[key]?.type]
         return (

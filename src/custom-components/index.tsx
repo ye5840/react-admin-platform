@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import { lazy } from 'react'
 
 const checkbox = lazy(() => import('./custom-checkbox/index'))
 const input = lazy(() => import('./custom-input/index'))

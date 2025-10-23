@@ -1,5 +1,6 @@
 import Mock from 'mockjs'
 import { SUCCESS_CODE } from '../../../src/constants'
+import type { TransferOutboundMockData } from '../../../src/types/transferOutboundMock'
 
 const timeout = 50
 const count = 200
@@ -124,7 +125,7 @@ const generateList = () => {
   }).list
 }
 
-const List = generateList()
+const List: TransferOutboundMockData[] = generateList()
 
 export default [
   {
