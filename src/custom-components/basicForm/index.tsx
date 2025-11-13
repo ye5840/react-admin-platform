@@ -1,23 +1,23 @@
 import { Form } from 'antd'
 import * as componentMap from '@/custom-components/index'
+import { memo, useCallback } from 'react'
 
 interface BasicFormProp {
   form: objAny
   formJson: objAny
-  useForm: {
-    formData: objAny
-    setFormData: Function
-  }
+  useBasicForm: Function
+  className: string
 }
 
 const BasicForm = (props: BasicFormProp) => {
   const { formConfig, formItemConfig } = props.formJson
-  const { useForm, form, formData } = props
-  const hanldeOnValuesChange = () => {
-    useForm.setFormData({ ...form.getFieldsValue() })
-  }
+  const { useBasicForm, form, className } = props
+  const { setFormData } = useBasicForm()
+  const hanldeOnValuesChange = useCallback(() => {
+    setFormData({ ...form.getFieldsValue() })
+  }, [setFormData])
   return (
-    <Form className={'mycomponents'} form={form} {...formConfig} onValuesChange={hanldeOnValuesChange}>
+    <Form form={form} {...formConfig} onValuesChange={hanldeOnValuesChange} className={className}>
       {Object.keys(formItemConfig || []).map(key => {
         const Component = componentMap[formItemConfig[key]?.type]
         return (
@@ -30,4 +30,4 @@ const BasicForm = (props: BasicFormProp) => {
   )
 }
 
-export default BasicForm
+export default memo(BasicForm)

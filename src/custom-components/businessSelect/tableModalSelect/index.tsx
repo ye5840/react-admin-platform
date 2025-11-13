@@ -1,10 +1,10 @@
-import { Modal, Select } from 'antd'
+import { Modal, Select, Tooltip } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import BasicForm from '@/custom-components/basicForm'
 import TableList from '@/custom-components/businessTable/tableList'
-import './index.less'
 import { useState, useEffect } from 'react'
 import { useForm } from 'antd/es/form/Form'
+import './index.less'
 
 interface TableSelectProp {
   labelName: string
@@ -14,19 +14,20 @@ const TableSelect = (props: TableSelectProp) => {
   const { labelName, modalConfig, tableConfig, formJson, value, setValue, api, optionsFieds, ...rest } = props
 
   const [formData, setFormData] = useState({})
+  const [dataSource, setDataSource] = useState([])
   const [form] = useForm()
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [srks, setSelectedRowKeys] = useState([])
-  const [tableSelectInfo, setTableSelectInfo] = useState({
-    value: setValue ? value : ''
-  })
-  const [rowSelection, setRowSelection] = useState({
-    onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-      setSelectedRowKeys(selectedRowKeys)
-    }
+  const [tableModalSelectInfo, setTableModalSelectInfo] = useState({
+    selectAndTableCheckedvalue: setValue ? value : rest.mode === 'multiple' ? [] : '',
+    labels: rest.mode === 'multiple' ? [] : '',
+    isModalOpen: false,
+    selectedRows: [],
+    compOptions: []
   })
 
-  const [options, setOptions] = useState([])
+  const rowSelection = {
+    type: rest.mode === 'multiple' ? 'checkbox' : 'radio',
+    onChange: (_rowKeys: any, _rows: any) => {}
+  }
 
   const getOptions = async () => {
     const res = await api.list({ currentPage: 1, pageSize: 99999999999 })
@@ -35,56 +36,97 @@ const TableSelect = (props: TableSelectProp) => {
       label: item[optionsFieds.label],
       value: item[optionsFieds.value]
     }))
-    setOptions(ops)
+    setTableModalSelectInfo(prev => ({
+      ...prev,
+      compOptions: ops
+    }))
   }
 
-  const handleOk = () => {
-    const value = rest.mode === 'multiple' ? srks : srks[0]
-    setValue(value)
-    setTableSelectInfo({
-      value
-    })
-    setIsModalOpen(false)
+  const [newestTableListAttribute, setNewestTableListAttribute] = useState({})
+
+  const handleOk = val => {
+    console.log(val, 'val---')
+    setTableModalSelectInfo(prev => ({
+      ...prev,
+      isModalOpen: false,
+      selectAndTableCheckedvalue: newestTableListAttribute.storeTabelListSelectedRowKeys
+    }))
   }
 
-  useEffect(() => {
-    if (!rest.mode) {
-      setRowSelection(prev => ({
-        ...prev,
-        type: 'radio'
-      }))
-    }
+  const openModal = () => {
+    setTableModalSelectInfo(prev => ({
+      ...prev,
+      isModalOpen: true
+    }))
+  }
+
+  const closeModal = () => {
+    setTableModalSelectInfo(prev => ({
+      ...prev,
+      isModalOpen: false
+    }))
+  }
+
+  const handleTableModalSelectChange = (val: any) => {
     if (rest.mode === 'multiple') {
-      setRowSelection(prev => ({
+      const labels = tableModalSelectInfo.compOptions
+        .filter(item => val.includes(item[optionsFieds.value]))
+        .map(item => item[optionsFieds.label])
+      setValue(val)
+      setTableModalSelectInfo(prev => ({
         ...prev,
-        type: 'checkbox'
+        selectAndTableCheckedvalue: val,
+        labels
       }))
     }
-  }, [])
+  }
+
+  const getTableListAttribute = val => {
+    setNewestTableListAttribute(val)
+  }
 
   useEffect(() => {
     getOptions()
   }, [])
+
+  useEffect(() => {
+    handleTableModalSelectChange(tableModalSelectInfo.selectAndTableCheckedvalue)
+  }, [tableModalSelectInfo.selectAndTableCheckedvalue])
   return (
     <>
-      <Select
-        placeholder={`请选择${labelName}`}
-        {...rest}
-        options={options}
-        value={tableSelectInfo.value}
-        suffixIcon={<SearchOutlined onClick={() => setIsModalOpen(true)} />}
-      ></Select>
+      <Tooltip placement='top' title={tableModalSelectInfo.labels.toString()}>
+        <Select
+          placeholder={`请选择${labelName}`}
+          options={tableModalSelectInfo.compOptions}
+          value={tableModalSelectInfo.selectAndTableCheckedvalue}
+          suffixIcon={<SearchOutlined onClick={openModal} />}
+          {...rest}
+          onChange={handleTableModalSelectChange}
+        ></Select>
+      </Tooltip>
       <Modal
-        open={isModalOpen}
+        open={tableModalSelectInfo.isModalOpen}
         onOk={handleOk}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={closeModal}
         width={960}
         cancelText={'取消'}
         okText={'确认'}
         {...modalConfig}
       >
-        <BasicForm form={form} formJson={formJson} formData={formData} setFormData={setFormData}></BasicForm>
-        <TableList tableConfig={{ rowSelection, ...tableConfig }} api={api} formData={formData}></TableList>
+        <BasicForm
+          className={'selectModalForm'}
+          form={form}
+          formJson={formJson}
+          useBasicForm={() => ({ formData, setFormData })}
+        ></BasicForm>
+        <TableList
+          getTableListAttribute={getTableListAttribute}
+          tableConfig={{ rowSelection, ...tableConfig }}
+          api={api}
+          formData={formData}
+          useTableListDataSource={() => ({ dataSource, setDataSource })}
+          initialCheck={tableModalSelectInfo.selectAndTableCheckedvalue}
+        ></TableList>
       </Modal>
     </>
   )

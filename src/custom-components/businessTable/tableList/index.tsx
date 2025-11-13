@@ -10,10 +10,9 @@ interface tableListProp {
   tableConfig: objAny
   api: objAny
   formData: objAny
-  useDataSource: {
-    dataSource: any[]
-    setDataSource: Function
-  }
+  useTableListDataSource: Function
+  getTableListAttribute?: Function
+  initialCheck?: any[]
 }
 
 interface PaginationParams {
@@ -27,9 +26,18 @@ interface resultDataType extends PaginationParams {
   totalPages: number
 }
 
-const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData, useDataSource }) => {
+const TableList: React.FC<tableListProp> = ({
+  tableConfig,
+  api,
+  formData,
+  useTableListDataSource,
+  getTableListAttribute,
+  initialCheck
+}) => {
   const { tableHeight } = useAppSelector((state: { app: any }) => state.app)
-  const { dataSource, setDataSource } = useDataSource
+  const { dataSource, setDataSource } = useTableListDataSource()
+  const [tabelListSelectedRowKeys, setTabelListSelectedRowKeys] = useState<React.Key[]>([])
+  const [storeTabelListSelectedRowKeys, setStoreTabelListSelectedRowKeys] = useState<React.Key[]>([])
 
   // 合并分页和查询条件的状态
   const [queryParams, setQueryParams] = useState<PaginationParams>({
@@ -55,7 +63,7 @@ const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData, useDat
     }
   })
 
-  const handlePageChange = (currentPage: number, pageSize: number) => {
+  const handlePageChange = async (currentPage: number, pageSize: number) => {
     const newParams = {
       ...queryParams,
       currentPage,
@@ -76,7 +84,22 @@ const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData, useDat
     run(newParams)
   }
 
-  const [componentTableProp, setComponentTableProp] = useState({
+  const handleSelectedRowKeysTabelChange = (newSelectedRowKeys: React.Key[], o: React.Key[]) => {
+    setTabelListSelectedRowKeys(newSelectedRowKeys)
+  }
+
+  const handleSelectedRowKeysTableSelect = (record: any, selected: boolean) => {
+    if (selected) {
+      setStoreTabelListSelectedRowKeys(prev => {
+        const next = Array.from(new Set([...prev, record.id]))
+        return next
+      })
+    } else {
+      setStoreTabelListSelectedRowKeys(prev => prev.filter(key => key !== record.id))
+    }
+  }
+
+  const initTableProp = {
     ...tableConfig,
     columns: [
       ...tableConfig.columns,
@@ -96,12 +119,54 @@ const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData, useDat
       showSizeChanger: true,
       showQuickJumper: true,
       onChange: handlePageChange
+    },
+    rowSelection: {
+      ...tableConfig.rowSelection,
+      onChange: handleSelectedRowKeysTabelChange,
+      onSelect: handleSelectedRowKeysTableSelect
     }
-  })
+  }
+
+  const [componentTableProp, setComponentTableProp] = useState({ ...initTableProp })
+
+  useEffect(() => {
+    // 日志在状态变更后打印，避免闭包读取旧值
+    const checkValue = dataSource
+      .filter((item: { id: React.Key }) => storeTabelListSelectedRowKeys?.includes(item.id))
+      .map(item => item.id)
+    setComponentTableProp(prev => ({
+      ...prev,
+      rowSelection: {
+        ...prev.rowSelection,
+        selectedRowKeys: checkValue
+      }
+    }))
+  }, [storeTabelListSelectedRowKeys, dataSource])
 
   useEffect(() => {
     run({ ...queryParams, ...formData }) // 在 useEffect 中触发请求
   }, [formData]) // 空依赖数组，只在组件挂载时请求一次
+
+  useEffect(() => {
+    getTableListAttribute?.({ componentTableProp, tabelListSelectedRowKeys, storeTabelListSelectedRowKeys })
+  }, [
+    componentTableProp,
+    setComponentTableProp,
+    tabelListSelectedRowKeys,
+    setTabelListSelectedRowKeys,
+    storeTabelListSelectedRowKeys,
+    setStoreTabelListSelectedRowKeys
+  ])
+
+  useEffect(() => {
+    if (!initialCheck || initialCheck.length === 0) return
+    const rowKeys: React.Key[] = []
+    initialCheck.forEach(item => {
+      if (storeTabelListSelectedRowKeys.includes(item)) return
+      rowKeys.push(item)
+    })
+    setStoreTabelListSelectedRowKeys([...storeTabelListSelectedRowKeys, ...rowKeys])
+  }, [initialCheck])
 
   return (
     <ContentWrap>
@@ -109,7 +174,7 @@ const TableList: React.FC<tableListProp> = ({ tableConfig, api, formData, useDat
         rowKey='id'
         loading={loading}
         {...componentTableProp}
-        scroll={{ ...componentTableProp.scroll, y: tableHeight }}
+        scroll={{ ...((componentTableProp as any).scroll || {}), y: tableHeight }}
       ></Table>
     </ContentWrap>
   )

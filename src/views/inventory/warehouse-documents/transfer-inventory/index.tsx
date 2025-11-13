@@ -3,6 +3,8 @@ import { getJson } from './config'
 import TableForm from '@/custom-components/businessForm/tableForm'
 import TableList from '@/custom-components/businessTable/tableList'
 
+interface formType {}
+interface listType {}
 const getInitFormData = () => ({
   // documentDate: '1',
   // auditStatus: '1',
@@ -13,18 +15,24 @@ const getInitFormData = () => ({
   // documentLabel: '1',
   // queryScope: 'parent 1-0-0'
 })
+const getInitListData = (): listType[] => []
 const TransferInventory: FC = () => {
-  const [formData, setFormData] = useState(getInitFormData())
+  const [formData, setFormData] = useState<formType>(getInitFormData())
+  const [dataSource, setDataSource] = useState<listType[]>(getInitListData())
   const { formJson, tableConfig, api } = getJson({ formData, setFormData })
   return (
     <>
       <TableForm
         formJson={formJson}
         initFormData={getInitFormData()}
-        formData={formData}
-        setFormData={setFormData}
+        useTableForm={() => ({ formData, setFormData })}
       ></TableForm>
-      <TableList tableConfig={tableConfig} api={api} formData={formData}></TableList>
+      <TableList
+        formData={formData}
+        tableConfig={tableConfig}
+        api={api}
+        useTableListDataSource={() => ({ dataSource, setDataSource })}
+      ></TableList>
     </>
   )
 }

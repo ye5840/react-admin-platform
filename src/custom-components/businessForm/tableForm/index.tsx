@@ -7,22 +7,20 @@ import './index.less'
 interface TableFormProp {
   formJson: objAny
   cardConfig?: objAny
-  useForm: {
-    formData: objAny
-    setFormData: Function
-  }
+  useTableForm: Function
   initFormData: objAny
 }
 
 const TableForm = (props: TableFormProp) => {
-  const { formJson, cardConfig, useForm, initFormData } = props
+  const { formJson, cardConfig, useTableForm, initFormData } = props
   const [form] = Form.useForm()
+  const { setFormData } = useTableForm()
 
   return (
     <div className='tableForm'>
-      <TableButton form={form} initFormData={initFormData} setFormData={useForm.setFormData}></TableButton>
+      <TableButton form={form} initFormData={initFormData} setFormData={setFormData}></TableButton>
       <ContentWrap {...cardConfig}>
-        <BasicForm form={form} formJson={formJson} useForm={useForm}></BasicForm>
+        <BasicForm className={'mycomponents'} form={form} formJson={formJson} useBasicForm={useTableForm}></BasicForm>
       </ContentWrap>
     </div>
   )

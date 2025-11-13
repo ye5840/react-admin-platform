@@ -89,24 +89,24 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
           valueField: 'value'
         }
       },
-      qu: {
-        labelName: '区',
-        type: 'select',
-        labelCol: { span: 24 },
-        wrapperCol: { span: 24 },
-        component: {
-          options: options.quOptions,
-          allowClear: true,
-          value: formData.auditStatus,
-          setValue: (val: any) => setFormData({ ...formData, qu: val })
-        },
-        name: 'qu',
-        prev: {
-          name: 'shi',
-          valueField: 'value'
-        },
-        next: undefined
-      },
+      // qu: {
+      //   labelName: '区',
+      //   type: 'select',
+      //   labelCol: { span: 24 },
+      //   wrapperCol: { span: 24 },
+      //   component: {
+      //     options: options.quOptions,
+      //     allowClear: true,
+      //     value: formData.auditStatus,
+      //     setValue: (val: any) => setFormData({ ...formData, qu: val })
+      //   },
+      //   name: 'qu',
+      //   prev: {
+      //     name: 'shi',
+      //     valueField: 'value'
+      //   },
+      //   next: undefined
+      // },
       material: {
         labelName: '物料',
         type: 'tableModalSelect',
@@ -123,7 +123,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
           modalConfig: {
             title: '物料列表'
           },
-          options: [],
+          maxTagCount: 1,
           tableConfig: {
             columns: [
               { title: '单据日期', dataIndex: 'documentDate', width: widthTypeOne },
@@ -226,7 +226,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
             scroll: {
               x: 15000
             },
-            dataSource: [],
+            // rowKey: 'info',
             // rowSelection: { type: 'radio' },
             // onRow: (record: any) => ({
             //   onClick: (event: any) => {
@@ -241,8 +241,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
           formJson: {
             formConfig: {
               size: 'small',
-              initialValues: formData,
-              className: 'regionWuliaoForm'
+              initialValues: formData
             },
             formItemConfig: {
               queryScope: {
@@ -540,7 +539,7 @@ export const getJson = ({ formData, setFormData, options, setOptions }) => {
   }
 
   const api = {
-    list: getTransferInventoryList
+    list: () => new Promise(r => r)
   }
 
   return {

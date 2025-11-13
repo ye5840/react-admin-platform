@@ -1,9 +1,11 @@
-import { useState, type FC } from 'react'
+import { useCallback, useMemo, useState, type FC } from 'react'
 import { getJson } from './config'
 import TableForm from '@/custom-components/businessForm/tableForm'
 import TableList from '@/custom-components/businessTable/tableList'
 import './index.less'
 
+interface formType {}
+interface listType {}
 const getInitFormData = () => ({
   // documentDate: '1',
   // auditStatus: '1',
@@ -14,8 +16,9 @@ const getInitFormData = () => ({
   // documentLabel: '1',
   // queryScope: 'parent 1-0-0'
 })
+const getInitListData = (): listType[] => []
 const TransferInventory: FC = () => {
-  const [formData, setFormData] = useState(getInitFormData())
+  const [formData, setFormData] = useState<formType>(getInitFormData())
   const [options, setOptions] = useState({
     guojiaOptions: [
       { label: '中国', value: 'CN' },
@@ -88,16 +91,24 @@ const TransferInventory: FC = () => {
       { label: '涩谷区', value: 'SG', parentValue: 'TKY' }
     ]
   })
-  const { formJson, tableConfig, api } = getJson({ formData, setFormData, options, setOptions })
+  const [dataSource, setDataSource] = useState<listType[]>(getInitListData())
+  const { formJson, tableConfig, api } = useMemo(
+    () => getJson({ formData, setFormData, options, setOptions }),
+    [formData, options, setFormData, setOptions]
+  )
   return (
     <>
       <TableForm
         formJson={formJson}
         initFormData={getInitFormData()}
-        formData={formData}
-        setFormData={setFormData}
+        useTableForm={() => ({ formData, setFormData })}
       ></TableForm>
-      <TableList tableConfig={tableConfig} api={api} formData={formData}></TableList>
+      <TableList
+        tableConfig={tableConfig}
+        api={api}
+        formData={formData}
+        useTableListDataSource={() => ({ dataSource, setDataSource })}
+      ></TableList>
     </>
   )
 }

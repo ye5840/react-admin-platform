@@ -36,12 +36,16 @@ const TransferOutbound: FC = () => {
   const { formJson, tableConfig, api } = getJson({ formData, setFormData })
   return (
     <>
-      <TableForm formJson={formJson} initFormData={getInitFormData()} useForm={{ formData, setFormData }}></TableForm>
+      <TableForm
+        formJson={formJson}
+        initFormData={getInitFormData()}
+        useTableForm={() => ({ formData, setFormData })}
+      ></TableForm>
       <TableList
         formData={formData}
         tableConfig={tableConfig}
         api={api}
-        useDataSource={{ dataSource, setDataSource }}
+        useTableListDataSource={() => ({ dataSource, setDataSource })}
       ></TableList>
     </>
   )
